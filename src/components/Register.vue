@@ -52,6 +52,7 @@
 
 <script>
     import axios from 'axios'
+    import {mapGetters} from 'vuex'
 
     export default {
         data() {
@@ -67,6 +68,10 @@
                 errorMsgOk: false,
                 errorMsgVisible:false
             }
+        },
+
+        computed: {
+            ...mapGetters (["REST_API_PREFIX"])
         },
 
         methods: {
@@ -86,7 +91,7 @@
                     (this.reginformation.pass == "")
                     ) {this.errorMsgVisible = true; return;}
                 
-                axios.get('http://rubexgroup.ru/wp-json/bi/v2/biautorise',
+                axios.get(this.REST_API_PREFIX + 'REST_API_PREFIX',
                 {
                     params: {
                         reginfo: this.reginformation
