@@ -2,13 +2,39 @@
     <div class = "loginBlk">
         
         <form action="" id="loginForm">
-            <input v-model="autinfo.mail" type = "email" placeholder="e-mail" name = "login_mail" />
-            <input v-model="autinfo.pass" type = "password" placeholder="Пароль" name = "login_pass" />
-            <label class = "checkbox_label" for = "save_login">
+            <v-text-field
+            label="Логин (e-mail)"
+            placeholder="введите e-mail"
+            v-model="autinfo.mail"
+            type = "email"
+            ></v-text-field>
+            
+            <v-text-field
+            label="Пароль"
+            placeholder="введите свой пароль"
+            v-model="autinfo.pass"
+            type = "password"
+            ></v-text-field>
+            
+
+            <v-checkbox
+            v-model = "savePassword"
+            label = "Запомнить пароль"
+            color = "info"
+            >
+            </v-checkbox>
+
+            <!-- <input v-model="autinfo.mail" type = "email" placeholder="e-mail" name = "login_mail" /> -->
+            <!-- <input v-model="autinfo.pass" type = "password" placeholder="Пароль" name = "login_pass" /> -->
+            <!-- <label class = "checkbox_label" for = "save_login">
                 <input v-model = "savePassword" id = "save_login" name = "save_login" type="checkbox">
                 <span>Запомнить пароль</span>
-            </label>
-            <button @click.prevent="getAutorisation" class = "LoginBtn">Войти</button>
+            </label> -->
+            <!-- <button @click.prevent="getAutorisation" class = "LoginBtn">Войти</button> -->
+            <v-btn
+            color="success"
+            @click.prevent="getAutorisation"
+            >Войти</v-btn>
         </form>
         
         <form-msg :error-msg = "errorMsg" :error-msg-ok = "errorMsgOk"  :error-msg-visible = "errorMsgVisible"></form-msg>

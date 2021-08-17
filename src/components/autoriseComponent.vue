@@ -56,9 +56,10 @@ export default {
 
 #autorise {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   background-color: #333;
+  padding: 10px;
 }
 
 #autorise .window {
@@ -94,7 +95,7 @@ export default {
 
 .logoline {
   margin: 30px 0;
-  height: 30px;
+  height: 45px;
   width: 100%;
 }
 

@@ -28,6 +28,10 @@ export default new Vuex.Store ({
         chengeUserName(ctx, value){
             ctx.commit('updateUserName', value);
         },
+
+        chengeLoginState(ctx, kpi){
+            ctx.commit('updateLoginState', kpi);
+        }
     },
 
     mutations: {
@@ -40,6 +44,9 @@ export default new Vuex.Store ({
             state.userName = newVal;
         },
         
+        updateLoginState(state, newVal) {
+            state.loginState = newVal;
+        }
 
     },
     

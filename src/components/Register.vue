@@ -2,23 +2,48 @@
     <div class = "loginBlk">
         <h2>Регистрация</h2>
         <form class = "windowForm" action="" id="registerForm">
-            <input v-model = "reginformation.fio" type = "text" placeholder="Ф.И.О.*" name = "login_pass" />
-            <input v-model = "reginformation.mail" type = "email" placeholder="e-mail*" name = "login_mail" />
-            <div class="select-wrap">
-                <select v-model = "reginformation.podrazdelenie" name = "login_pas">
-                    <option class = "disabled" disabled value="">Выберите подразделение*</option>
-                    <option value="Маркетинг">Маркетинг</option>
-                    <option value="Отдел продаж">Отдел продаж</option>
-                    <option value="ОМТО">ОМТО</option>
-                </select>
-            </div>
-            <!-- <input v-model = "reginformation.mail" type = "text" placeholder="Подразделение" name = "login_pass" /> -->
-            <input v-model = "reginformation.dolgnost"  type = "text" placeholder="Должность*" name = "login_pass" />
-            <input v-model = "reginformation.pass" type = "password" placeholder="Пароль*" name = "login_pass" />
-            <button @click.prevent="registerUser" class = "LoginBtn">Регистрация</button>
+            <v-text-field
+            v-model = "reginformation.fio"
+            type = "text"
+            label = "Ф.И.О."
+            placeholder="введите Ф.И.О."
+            ></v-text-field>
+            
+            <v-text-field
+            v-model = "reginformation.mail"
+            type = "email"
+            label = "e-mail"
+            placeholder="введите e-mail"
+            ></v-text-field>
+            
+            <v-text-field
+            v-model = "reginformation.dolgnost"
+            type = "text"
+            label = "Должность"
+            placeholder="введите должность"
+            ></v-text-field>
+            
+            <v-text-field
+            v-model = "reginformation.pass"
+            type = "password"
+            label = "Пароль"
+            placeholder="введите пароль"
+            ></v-text-field>
+
+            <v-btn
+            color="success"
+            @click.prevent="registerUser"
+            >Регистрация</v-btn>
         </form>
+        <v-alert
+        border="right"
+        colored-border
+        type="error"
+        elevation="2"
+        v-show="errorMsgVisible"
+        >{{errorMsg}}</v-alert>
         
-        <form-msg :error-msg = "errorMsg" :error-msg-ok = "errorMsgOk"  :error-msg-visible = "errorMsgVisible"></form-msg>
+        <!-- <form-msg :error-msg = "errorMsg" :error-msg-ok = "errorMsgOk"  :error-msg-visible = "errorMsgVisible"></form-msg> -->
 
         <a @click.prevent="toAutorise" href="#" class="controlLnk">Войти в систему</a>
        
@@ -27,10 +52,8 @@
 
 <script>
     import axios from 'axios'
-    import formMsg from './formMsg.vue';
 
     export default {
-  components: { formMsg },
         data() {
             return {  
                 reginformation: {

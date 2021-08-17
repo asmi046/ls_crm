@@ -2,8 +2,18 @@
     <div class = "loginBlk">
         
         <form action="" class = "windowForm" id="passRecForm">
-            <input v-model="mail" type = "email" placeholder="e-mail" name = "passrec_mail" />
-            <button @click.prevent="recoveryPass" class = "passRecBtn">Восстановить</button>
+            <v-text-field
+            label="Логин (e-mail)"
+            placeholder="введите e-mail"
+            type = "email"
+            ></v-text-field>
+
+            <v-btn
+            @click.prevent="recoveryPass"
+            color="success"
+            >Восстановить</v-btn>
+            <!-- <input v-model="mail" type = "email" placeholder="e-mail" name = "passrec_mail" />
+            <button @click.prevent="recoveryPass" class = "passRecBtn">Восстановить</button> -->
         </form>
         <form-msg :error-msg = "errorMsg" :error-msg-ok = "errorMsgOk"  :error-msg-visible = "errorMsgVisible"></form-msg>
         
