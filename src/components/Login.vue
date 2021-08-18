@@ -24,20 +24,23 @@
             >
             </v-checkbox>
 
-            <!-- <input v-model="autinfo.mail" type = "email" placeholder="e-mail" name = "login_mail" /> -->
-            <!-- <input v-model="autinfo.pass" type = "password" placeholder="Пароль" name = "login_pass" /> -->
-            <!-- <label class = "checkbox_label" for = "save_login">
-                <input v-model = "savePassword" id = "save_login" name = "save_login" type="checkbox">
-                <span>Запомнить пароль</span>
-            </label> -->
-            <!-- <button @click.prevent="getAutorisation" class = "LoginBtn">Войти</button> -->
+
             <v-btn
             color="success"
             @click.prevent="getAutorisation"
             >Войти</v-btn>
         </form>
         
-        <form-msg :error-msg = "errorMsg" :error-msg-ok = "errorMsgOk"  :error-msg-visible = "errorMsgVisible"></form-msg>
+
+        <v-alert
+        border="right"
+        colored-border
+        v-bind:type = errorMsgOk
+        elevation="2"
+        v-show="errorMsgVisible"
+        >{{errorMsg}}</v-alert>
+
+        <!-- <form-msg :error-msg = "errorMsg" :error-msg-ok = "errorMsgOk"  :error-msg-visible = "errorMsgVisible"></form-msg> -->
         
         <a @click.prevent="toRegister" href="#" class="controlLnk">Регистрация в системе</a><br/>
         <a @click.prevent="toPassRec" href="#" class="controlLnk">Восстановить пароль</a>
@@ -47,11 +50,12 @@
 
 <script>
     import axios from 'axios';
-    import formMsg from './formMsg.vue';
     import allLibs from '../lib/libs';
 
+    import {mapGetters} from 'vuex'
+
     export default {
-        components: { formMsg },
+        
         data() {
       
             return {
@@ -63,11 +67,15 @@
                 savePassword:false,
 
                 errorMsg:"Заполните все обязательные поля помеченные *",
-                errorMsgOk: false,
+                errorMsgOk: "error",
                 errorMsgVisible:false
             }
         },
         
+        computed: {
+            ...mapGetters (["REST_API_PREFIX"])
+        },
+
         mounted: function() {
             if (allLibs.getCookie("userlogin") != undefined)
             {
@@ -95,9 +103,7 @@
                 }
 
 
-               
-                
-                axios.get(this.$store.getters.REST_API_PREFIX + 'userautorization',
+                axios.get(this.REST_API_PREFIX + 'userautorization',
                 {
                     params: {
                         autinfo: this.autinfo

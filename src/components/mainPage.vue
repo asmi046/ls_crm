@@ -1,6 +1,6 @@
 <template>
   <div class="pageWrapper">
-      
+     <h1>Привет</h1> 
   </div>
 </template>
 

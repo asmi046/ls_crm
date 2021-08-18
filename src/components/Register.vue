@@ -6,28 +6,24 @@
             v-model = "reginformation.fio"
             type = "text"
             label = "Ф.И.О."
-            placeholder="введите Ф.И.О."
             ></v-text-field>
             
             <v-text-field
             v-model = "reginformation.mail"
             type = "email"
             label = "e-mail"
-            placeholder="введите e-mail"
             ></v-text-field>
             
             <v-text-field
             v-model = "reginformation.dolgnost"
             type = "text"
             label = "Должность"
-            placeholder="введите должность"
             ></v-text-field>
             
             <v-text-field
             v-model = "reginformation.pass"
             type = "password"
             label = "Пароль"
-            placeholder="введите пароль"
             ></v-text-field>
 
             <v-btn
@@ -38,7 +34,7 @@
         <v-alert
         border="right"
         colored-border
-        type="error"
+        v-bind:type = errorMsgOk
         elevation="2"
         v-show="errorMsgVisible"
         >{{errorMsg}}</v-alert>
@@ -65,7 +61,7 @@
                     pass: "",
                 },
                 errorMsg:"Заполните все обязательные поля помеченные *",
-                errorMsgOk: false,
+                errorMsgOk: "error",
                 errorMsgVisible:false
             }
         },
@@ -81,31 +77,34 @@
 
             registerUser() {
                 this.errorMsgVisible = false;
-                this.errorMsgOk = false;
+                this.errorMsgOk = "error";
                 
+                console.log(this.reginformation);
+
                 if (
                     (this.reginformation.fio == "") ||
-                    (this.reginformation.mail == "")  ||
-                    (this.reginformation.podrazdelenie == "") || 
+                    (this.reginformation.mail == "")  || 
                     (this.reginformation.dolgnost == "") || 
                     (this.reginformation.pass == "")
                     ) {this.errorMsgVisible = true; return;}
                 
-                axios.get(this.REST_API_PREFIX + 'REST_API_PREFIX',
+                axios.get(this.REST_API_PREFIX + 'getregister',
                 {
                     params: {
                         reginfo: this.reginformation
                     }
                 })
-                .then( () => {
+                .then( (resp) => {
                     this.reginformation.fio == "";
                     this.reginformation.mail == "";
                     this.reginformation.podrazdelenie == "";
                     this.reginformation.dolgnost == "";
                     this.reginformation.pass == "";
                     this.errorMsg = "Вы успешно зарегистрированны. Ждите подтверждения регистрации.";
-                    this.errorMsgOk = true;
+                    this.errorMsgOk = "success";
                     this.errorMsgVisible = true;
+
+                    console.log(resp);
                 })
 
                 .catch((error) => {
