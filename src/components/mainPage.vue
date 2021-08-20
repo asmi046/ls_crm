@@ -11,8 +11,16 @@
         temporary
       ></v-navigation-drawer>
 
-      <v-content>
-          <h1>Привет</h1>
+      <v-content class="pa-3">
+          <v-sheet width="100%"  min-height="30">
+
+          </v-sheet >
+
+          <v-sheet width="100%">
+            <v-calendar locale="ru" :type = "type" :events = "events" @change="getEvents">
+
+            </v-calendar>
+          </v-sheet>
       </v-content>
   </div>
 </template>
@@ -21,9 +29,26 @@
 export default {
   data() {
     return {  
-      showMenu:false
+      showMenu:false,
+      type:"month",
+      events:[]
     }
-  }
+  },
+
+      methods: {
+        getEvents () {
+          console.log("ddd");
+          let ev =[];
+          ev.push({
+          name:"Событие #1",
+          start:new Date(),
+          
+          });
+
+          this.events = ev;
+          console.log(this.events);
+        }
+      }
 }
 </script>
 
