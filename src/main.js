@@ -8,6 +8,8 @@ import store from './store'
 import router from './router'
 import vuetify from './plugins/vuetify'
 
+import { VueMaskDirective } from 'v-mask'
+Vue.directive('mask', VueMaskDirective);
 
 Vue.use(VueAxios, axios);
 
