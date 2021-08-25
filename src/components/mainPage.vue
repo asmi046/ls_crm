@@ -31,7 +31,7 @@
       </v-navigation-drawer>
         
         <add-zakaz-form v-show="selectedItem == 1"></add-zakaz-form>
-        
+        <draft-list v-show="selectedItem == 2"></draft-list>
         <v-container v-show="selectedItem == 0" class = "pd-2" >
           
           <v-row>
@@ -57,6 +57,8 @@
                   <v-calendar locale="ru"  :type = "type" :events = "events" @change="getEvents"></v-calendar>
                 </v-sheet>
             </v-col>
+
+
           </v-row>
 
           <v-row>
@@ -86,8 +88,9 @@
 
 <script>
 import addZakazForm from './addZakazForm.vue';
+import DraftList from './draftList.vue';
 export default {
-    components: { addZakazForm },
+    components: { addZakazForm, DraftList },
   data() {
     return {  
       

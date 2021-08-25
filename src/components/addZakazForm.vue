@@ -51,17 +51,29 @@
                         :items="desserts"
                         item-key="name"
                         class="elevation-1"
-                        hideDefaultFooter = "false"
+                        :hideDefaultFooter = "true"
                     ></v-data-table>                    
                 </v-col>
             </v-row>
             
             <v-row>
-                <v-col>
+                <v-col md = "3" cols="12">
                     <v-btn color="secondary">
-                        <v-icon>mdi-plus</v-icon> Добавить товар
+                        <v-icon class="mr-2">mdi-plus</v-icon> Добавить товар
                     </v-btn>
                 </v-col>
+
+                <v-col md = "4" cols="12">
+                    <v-btn color="success">
+                        <v-icon class="mr-2">mdi-content-copy</v-icon> Копировать с другой датой
+                    </v-btn>
+                </v-col>
+                <v-col md = "3" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
+                    <v-btn color="success">
+                        <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
+                    </v-btn>
+                </v-col>
+
             </v-row>
         </v-form>
     </v-container>

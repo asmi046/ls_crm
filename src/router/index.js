@@ -15,7 +15,7 @@ let router = new VueRouter ( {
             {
                 path: '/',
                 name: 'service',
-                meta: {title: "Корпоративные сервисы RubEx Group"},
+                meta: {title: "Панель управления"},
                 component: mainPage
             },
             
