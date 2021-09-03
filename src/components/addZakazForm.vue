@@ -5,41 +5,41 @@
                 <h1>Создать заказ</h1>
             </v-col>
         </v-row>
-        <v-form>
+        <v-form ref="addZakForm">
             <v-row>
                 <v-col md = "6" cols = "12">
-                    <v-text-field label="Номер заказа" prepend-inner-icon="mdi-tag" ></v-text-field>
+                    <v-text-field @focus="generateZn" v-model="zakazData.zaknumber" label="Номер заказа" prepend-inner-icon="mdi-tag" readonly ></v-text-field>
                 </v-col>
                 
                 <v-col md = "6" cols = "12">
-                    <v-text-field label="Дата оформления" prepend-inner-icon="mdi-calendar" ></v-text-field>
+                    <v-text-field @focus="generateZn" v-model="zakazData.data" label="Дата оформления" prepend-inner-icon="mdi-calendar" readonly ></v-text-field>
                 </v-col>
             </v-row>
 
             <v-row>
                 <v-col md = "6" cols = "12" >
-                    <v-text-field label="Клиент" prepend-inner-icon="mdi-account" ></v-text-field>
+                    <v-text-field :rules="upp3Rules" v-model="zakazData.name" label="Клиент" prepend-inner-icon="mdi-account" req ></v-text-field>
                 </v-col>
                 <v-col md = "3"  cols="12">
-                    <v-text-field v-model="phone" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone" ></v-text-field>
+                    <v-text-field :rules="phoneRules" v-model="zakazData.phone" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone" ></v-text-field>
                 </v-col>
                 <v-col  md = "3" cols="12">
-                    <v-text-field  v-model="phone2" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone-outline" ></v-text-field>
+                    <v-text-field  :rules="phoneRules" v-model="zakazData.phone2" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone-outline" ></v-text-field>
                 </v-col>
             </v-row>
                 
             <v-row>
                 <v-col >
-                    <v-text-field label="Адрес доставки" prepend-inner-icon="mdi-map-marker-multiple" ></v-text-field>
+                    <v-text-field :rules="upp3Rules"  v-model="zakazData.adr" label="Адрес доставки" prepend-inner-icon="mdi-map-marker-multiple" ></v-text-field>
                 </v-col>
             </v-row>
 
             <v-row>
                 <v-col md = "6" cols = "12">
-                    <v-text-field label="Номер счета" prepend-inner-icon="mdi-file-document" ></v-text-field>
+                    <v-text-field v-model="zakazData.shetn"  label="Номер счета" prepend-inner-icon="mdi-file-document" ></v-text-field>
                 </v-col>
                 <v-col md = "6" cols = "12">
-                    <v-text-field  label="Сумма счета" prepend-inner-icon="mdi-currency-rub" ></v-text-field>
+                    <v-text-field v-model="zakazData.shetsumm"  label="Сумма счета" prepend-inner-icon="mdi-currency-rub" ></v-text-field>
                 </v-col>
             </v-row>
 
@@ -57,6 +57,29 @@
             </v-row>
             
             <v-row>
+                <v-col cols="12">
+                <v-alert
+                    border="right"
+                    colored-border
+                    type = "error"
+                    elevation="2"
+                    v-show="showAlert"
+                    >Заполните все обязательные поля формы</v-alert>
+                
+
+                <v-alert
+                    border="right"
+                    colored-border
+                    type = "success"
+                    elevation="2"
+                    v-show="showAcses"
+                    >Данные успешно добавленны</v-alert>
+                </v-col>
+            </v-row>
+            
+            
+            
+            <v-row>
                 <v-col md = "3" cols="12">
                     <v-btn color="secondary">
                         <v-icon class="mr-2">mdi-plus</v-icon> Добавить товар
@@ -69,7 +92,7 @@
                     </v-btn>
                 </v-col>
                 <v-col md = "3" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
-                    <v-btn color="success">
+                    <v-btn @click.prevent="addZakToBase" color="success">
                         <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
                     </v-btn>
                 </v-col>
@@ -80,11 +103,35 @@
 </template>
 
 <script>
+import axios from 'axios';
+import {mapGetters} from 'vuex'
+
 export default {
     data() {
         return {
-            phone:"",
-            phone2:"",
+            zakazData: {
+                zaknumber:"",
+                data:"",
+                name:"",
+                phone:"",
+                phone2:"",
+                adr:"",
+                shetn:"",
+                shetsumm:""
+            },
+            
+            requiredRules:[
+                value => !!value || 'Должно быть заполнено.'
+            ],
+            upp3Rules:[
+                value => (value && value.length >= 3) || 'Должно быть больше 3 символов',
+            ],
+            phoneRules:[
+                value => (value && value.length >= 18) || 'Телефон некорректен',
+            ],
+
+            showAlert: false,
+            showAcses: false,
 
             headers: [
                 {text: "Наименование", value: "name"},
@@ -113,6 +160,57 @@ export default {
                     summ: 15000
                  }
              ]
+        }
+    },
+    
+    computed: {
+            ...mapGetters (["REST_API_PREFIX"])
+    },
+
+    created: function() {
+        this.generateZn()
+    },
+
+    methods:{
+        generateZn() {
+            var nowData = new Date();
+            this.zakazData.zaknumber = "ZN_"+nowData.getDate()+"_"+nowData.getMonth()+"_"+nowData.getMilliseconds()+"_"+Math.floor(Math.random() * 1000);
+            this.zakazData.data = new Date().toJSON().slice(0, 19).replace('T', ' ')
+        },
+
+        addZakToBase() {
+            if (this.$refs.addZakForm.validate())
+            {
+                axios.get(this.REST_API_PREFIX + 'add_zak',
+                {
+                    params: {
+                        zakinfo: this.zakazData
+                    }
+                })
+                .then( (resp) => {
+                    this.showAcses = true;
+                    console.log(resp);
+                })
+
+                .catch((error) => {
+                    let rezText = "";
+                    if (error.response)
+                    {
+                        rezText = error.response.data.message;
+                    } else 
+                    if (error.request) {
+                        rezText = error.message;
+                    } else {
+                        rezText = error.message;
+                    }
+                    
+                    console.log(error.config);
+                    this.errorMsg = rezText;
+                    this.showAlert = true;
+                });
+            }
+            else 
+            this.showAlert = true;
         }
     }
 }
