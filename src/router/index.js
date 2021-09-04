@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import autoriseComponent from '../components/autoriseComponent'
 import mainPage from '../components/mainPage'
+import addZakazForm from '../components/addZakazForm'
 
 import store from '../store';
 import allLibs from '../lib/libs'
@@ -19,6 +20,12 @@ let router = new VueRouter ( {
                 component: mainPage
             },
             
+            {
+                path: '/add_zak',
+                name: 'addzak',
+                meta: {title: "Добавить заказ"},
+                component: addZakazForm
+            },
 
             {
                 path: '/login',

@@ -1,35 +1,5 @@
 <template>
   <div>
-      <v-app-bar> 
-        <v-app-bar-nav-icon @click="showMenu = !showMenu"></v-app-bar-nav-icon>
-        <v-toolbar-title>Панель инструментов менеджера</v-toolbar-title>
-      </v-app-bar>
-      
-      <v-navigation-drawer
-        v-model="showMenu"
-        absolute
-        temporary
-      >
-        <v-list
-          nav
-          dense
-        >
-          <v-list-item-group
-            @change = "showMenu = false"
-            v-model="selectedItem"
-            active-class="deep-purple--text text--accent-4"
-          >
-            <v-list-item v-for="(item, i) in itemsMeny" :key="i">
-              <v-list-item-icon>
-                <v-icon>{{item.icon}}</v-icon>
-              </v-list-item-icon>
-              <v-list-item-title>{{item.text}}</v-list-item-title>
-            </v-list-item>
-
-          </v-list-item-group>
-        </v-list>
-      </v-navigation-drawer>
-        
         <add-zakaz-form v-show="selectedItem == 1"></add-zakaz-form>
         <draft-list v-show="selectedItem == 2"></draft-list>
         <v-container v-show="selectedItem == 0" class = "pd-2" >
@@ -98,12 +68,7 @@ export default {
       type:"month",
       events:[],
       showCalendar:false,
-      selectedItem:0,
-      itemsMeny: [
-        {text: 'Главная', icon: 'mdi-home'},
-        {text: 'Создать заказ', icon: 'mdi-file-document-outline'},
-        {text: 'Черновики', icon: 'mdi-file-alert-outline'}
-      ],
+
 
       headers: [
           {
