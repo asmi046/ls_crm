@@ -1,12 +1,31 @@
 <template>
-    <v-container class = "pd-2" >
-        <h1>Черновики заказов</h1>      
+  <v-container class = "pd-2" >
+          
           <v-row>
             <v-col>
               <v-form>
                 <v-text-field label="Введите запрос" prepend-inner-icon="mdi-magnify" ></v-text-field>
               </v-form>
             </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <v-btn tile :color="(!showCalendar)?'success':'error'"  @click.prevent="showCalendar = !showCalendar">
+                <v-icon left>mdi-calendar</v-icon>
+                  <span v-text = "(!showCalendar)?'Показать календарь':'Скрыть календарь'">Показать календарь</span>
+              </v-btn>              
+            </v-col>
+          </v-row>
+          
+          <v-row v-show = "showCalendar">
+            <v-col>
+                <v-sheet width="100%">
+                  <v-calendar locale="ru"  :type = "type" :events = "events" @change="getEvents"></v-calendar>
+                </v-sheet>
+            </v-col>
+
+
           </v-row>
 
           <v-row>
@@ -35,8 +54,12 @@
 
 <script>
 export default {
-    data() {
-        return{
+    data(){
+        return {
+            type:"month",
+            events:[],
+            showCalendar:false,
+
             headers: [
                 {
                     text: 'Номер заказа',
@@ -48,6 +71,7 @@ export default {
                 { text: 'Телефон', value: 'phone' },
                 { text: 'Сумма', value: 'summ' },
             ],
+
             desserts: [
                 {
                     number: 'LS_000213',
@@ -70,7 +94,22 @@ export default {
                     phone: '+7 903 333-08-01',
                     summ: '15000',
                 }
-            ], 
+            ],
+        }
+    },
+
+    methods: {
+        getEvents () {
+            console.log("ddd");
+            let ev =[];
+            ev.push({
+            name:"Событие #1",
+            start:new Date(),
+
+            });
+
+            this.events = ev;
+            console.log(this.events);
         }
     }
 }

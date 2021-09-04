@@ -20,7 +20,7 @@
             v-model="selectedItem"
             active-class="deep-purple--text text--accent-4"
           >
-            <v-list-item v-for="(item, i) in itemsMeny" :key="i">
+            <v-list-item v-for="(item, i) in itemsMeny" :key="i" :to = "item.to">
               <v-list-item-icon>
                 <v-icon>{{item.icon}}</v-icon>
               </v-list-item-icon>
@@ -45,9 +45,9 @@ export default {
     showMenu:false,
     selectedItem:0,
     itemsMeny: [
-        {text: 'Главная', icon: 'mdi-home'},
-        {text: 'Создать заказ', icon: 'mdi-file-document-outline'},
-        {text: 'Черновики', icon: 'mdi-file-alert-outline'}
+        {text: 'Главная', icon: 'mdi-home', to: "/"},
+        {text: 'Создать заказ', icon: 'mdi-file-document-outline', to: {name:'addzak'}},
+        {text: 'Черновики', icon: 'mdi-file-alert-outline', to: {name:'draft'}}
     ],
   }),
 };
