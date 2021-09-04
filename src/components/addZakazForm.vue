@@ -61,20 +61,12 @@
                 <v-alert
                     border="right"
                     colored-border
-                    type = "error"
+                    :type = "alertType"
                     elevation="2"
                     v-show="showAlert"
-                    >Заполните все обязательные поля формы</v-alert>
+                    >{{message}}</v-alert>
+                    </v-col>
                 
-
-                <v-alert
-                    border="right"
-                    colored-border
-                    type = "success"
-                    elevation="2"
-                    v-show="showAcses"
-                    >Данные успешно добавленны</v-alert>
-                </v-col>
             </v-row>
             
             
@@ -130,8 +122,9 @@ export default {
                 value => (value && value.length >= 18) || 'Телефон некорректен',
             ],
 
+            alertType: "error",
             showAlert: false,
-            showAcses: false,
+            message: "",
 
             headers: [
                 {text: "Наименование", value: "name"},
@@ -188,7 +181,9 @@ export default {
                     }
                 })
                 .then( (resp) => {
-                    this.showAcses = true;
+                    this.message = "Данные добавленны"
+                    this.alertType = "success";
+                    this.showAlert = true;
                     console.log(resp);
                 })
 
@@ -205,12 +200,18 @@ export default {
                     }
                     
                     console.log(error.config);
-                    this.errorMsg = rezText;
-                    this.showAlert = true;
+                    
+                    this.message = rezText
+                    this.showAlert = "error"
+                    this.showAlert = true
                 });
             }
             else 
-            this.showAlert = true;
+            {
+                this.message = "Не заполнены обязательные поля!"
+                this.showAlert = "error";
+                this.showAlert = true;
+            }
         }
     }
 }
