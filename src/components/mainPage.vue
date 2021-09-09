@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ManagerMainPage from './managerMainPage.vue';
+import ManagerMainPage from './managerPanel/managerMainPage.vue';
 export default {
     components: { ManagerMainPage },
   data() {

@@ -16,10 +16,15 @@ export default new Vuex.Store ({
         userDolgnost: "",
 
         loginState:"autorise", //Окно которое отображаетс на странице авторизации / регистрации
-
+        // Поля для меню приложения
+        showPanel:false
     },
 
     actions: {
+        showedPanel(ctx, value){
+            ctx.commit('showedPanel', value);
+        },
+
         // Экшкны авторизации
         chengeAutorise(ctx, value){
             ctx.commit('updateAutorise', value);
@@ -35,6 +40,10 @@ export default new Vuex.Store ({
     },
 
     mutations: {
+        showedPanel(state, newVal) {
+            state.showPanel = newVal;
+        },
+
         // Мутации авторизации
         updateAutorise(state, newVal) {
             state.autorise = newVal;
@@ -51,6 +60,10 @@ export default new Vuex.Store ({
     },
     
     getters: {
+        SHOW_PANEL(state) {
+            return state.showPanel;
+        },
+        
         REST_API_PREFIX (state) {
             return state.rest_api_prefix;
         },

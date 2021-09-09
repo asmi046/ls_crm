@@ -3,8 +3,8 @@ import VueRouter from 'vue-router'
 
 import autoriseComponent from '../components/autoriseComponent'
 import mainPage from '../components/mainPage'
-import addZakazForm from '../components/addZakazForm'
-import draftList from '../components/draftList'
+import addZakazForm from '../components/managerPanel/addZakazForm'
+import draftList from '../components/managerPanel/draftList'
 
 
 import store from '../store';
@@ -56,11 +56,14 @@ router.beforeEach((to, from, next) => {
     {
         store.dispatch('chengeAutorise',  true);
         store.dispatch('chengeUserName',   localStorage.getItem('fio'));
+        store.dispatch('showedPanel',  true);
     }
     else {
         store.dispatch('chengeAutorise',  false);
         if (to.name !== "login") 
            allLibs.reloginUser();
+        
+        store.dispatch('showedPanel',  false);
     } 
 
     if ((!store.getters.AUTORISE) && (to.name !== "login")) {

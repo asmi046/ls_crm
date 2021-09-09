@@ -1,11 +1,20 @@
 <template>
   <v-app >
     <v-main>
-      <v-app-bar> 
+      <v-app-bar v-show="SHOW_PANEL"> 
         <v-app-bar-nav-icon @click="showMenu = !showMenu"></v-app-bar-nav-icon>
         <v-toolbar-title>Панель инструментов менеджера</v-toolbar-title>
+      
+        <v-spacer></v-spacer>
+        
+        <v-btn icon @click.prevent="appExit">
+          <v-icon>mdi-exit-to-app</v-icon>
+        </v-btn>
+      
       </v-app-bar>
       
+
+
       <v-navigation-drawer
         v-model="showMenu"
         absolute
@@ -37,9 +46,15 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
+import allLibs from './lib/libs'
 
 export default {
   name: 'App',
+  
+  computed: {
+    ...mapGetters (["REST_API_PREFIX", "SHOW_PANEL"])
+  },
 
   data: () => ({
     showMenu:false,
@@ -50,5 +65,11 @@ export default {
         {text: 'Черновики', icon: 'mdi-file-alert-outline', to: {name:'draft'}}
     ],
   }),
+
+  methods: {
+    appExit() {
+      allLibs.reloginUser();
+    }
+  }
 };
 </script>

@@ -69,12 +69,13 @@
                 
             </v-row>
             
-            
+            <add-tovar-dialog :show-dlg="addTovarDialogShow" :close-dlg="cloaseDlg"></add-tovar-dialog>  
+                
             
             <v-row>
                 <v-col md = "3" cols="12">
-                    <v-btn color="secondary">
-                        <v-icon class="mr-2">mdi-plus</v-icon> Добавить товар
+                    <v-btn @click="showDialog" color="secondary">
+                        <v-icon  class="mr-2">mdi-plus</v-icon> Добавить товар
                     </v-btn>
                 </v-col>
 
@@ -91,16 +92,22 @@
 
             </v-row>
         </v-form>
+
+
+
     </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import {mapGetters} from 'vuex'
+import addTovarDialog from './addTovarDialog.vue';
 
 export default {
+    components: { addTovarDialog },
     data() {
         return {
+            addTovarDialogShow:false,
             zakazData: {
                 zaknumber:"",
                 data:"",
@@ -165,6 +172,12 @@ export default {
     },
 
     methods:{
+        cloaseDlg() {
+            this.addTovarDialogShow = false;
+        },
+        showDialog() {
+            this.addTovarDialogShow = !this.addTovarDialogShow;
+        },
         generateZn() {
             var nowData = new Date();
             this.zakazData.zaknumber = "ZN_"+nowData.getDate()+"_"+nowData.getMonth()+"_"+nowData.getMilliseconds()+"_"+Math.floor(Math.random() * 1000);

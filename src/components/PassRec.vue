@@ -15,7 +15,6 @@
             <!-- <input v-model="mail" type = "email" placeholder="e-mail" name = "passrec_mail" />
             <button @click.prevent="recoveryPass" class = "passRecBtn">Восстановить</button> -->
         </form>
-        <form-msg :error-msg = "errorMsg" :error-msg-ok = "errorMsgOk"  :error-msg-visible = "errorMsgVisible"></form-msg>
         
         <a @click.prevent="toAutorise" href="#" class="controlLnk">Войти в систему</a>
         
@@ -24,10 +23,8 @@
 
 <script>
     import axios from 'axios';
-    import formMsg from './formMsg.vue';
 
     export default {
-        components: { formMsg },
         data() {
             return {
                 mail:"",
