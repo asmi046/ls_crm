@@ -48,7 +48,7 @@
                     <v-data-table
                         dense
                         :headers="headers"
-                        :items="desserts"
+                        :items="zakazData.zaktovars"
                         item-key="name"
                         class="elevation-1"
                         :hideDefaultFooter = "true"
@@ -69,7 +69,7 @@
                 
             </v-row>
             
-            <add-tovar-dialog :show-dlg="addTovarDialogShow" :close-dlg="cloaseDlg"></add-tovar-dialog>  
+            <add-tovar-dialog :show-dlg="addTovarDialogShow" :close-dlg="cloaseDlg" :add-to-zak = "addTovarToZak"></add-tovar-dialog>  
                 
             
             <v-row>
@@ -85,7 +85,7 @@
                     </v-btn>
                 </v-col>
                 <v-col md = "3" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
-                    <v-btn @click.prevent="addZakToBase" color="success">
+                    <v-btn  @click.prevent="addZakToBase" color="success">
                         <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
                     </v-btn>
                 </v-col>
@@ -116,7 +116,10 @@ export default {
                 phone2:"",
                 adr:"",
                 shetn:"",
-                shetsumm:""
+                shetsumm:"",
+                zaktovars:[ 
+                
+                ]
             },
             
             requiredRules:[
@@ -140,26 +143,6 @@ export default {
                 {text: "Сумма", value: "summ"}
             ],
 
-             desserts: [ 
-                 {
-                    name: "Лампа №1",
-                    count: 1,
-                    price: 500,
-                    summ: 500
-                 },
-                 {
-                    name: "Лампа №2",
-                    count: 3,
-                    price: 1000,
-                    summ: 3000
-                 },
-                 {
-                    name: "Лампа №3",
-                    count: 3,
-                    price: 5000,
-                    summ: 15000
-                 }
-             ]
         }
     },
     
@@ -177,6 +160,16 @@ export default {
         },
         showDialog() {
             this.addTovarDialogShow = !this.addTovarDialogShow;
+        },
+
+        addTovarToZak(element) {
+            this.zakazData.zaktovars.push({
+                img: element.img,
+                name: element.name,
+                count: element.count,
+                price: element.price,
+                summ: element.summ
+            })
         },
         generateZn() {
             var nowData = new Date();
