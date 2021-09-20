@@ -11,8 +11,12 @@
                     <v-text-field @focus="generateZn" v-model="zakazData.zaknumber" label="Номер заказа" prepend-inner-icon="mdi-tag" readonly ></v-text-field>
                 </v-col>
                 
-                <v-col md = "6" cols = "12">
+                <v-col md = "3" cols = "12">
                     <v-text-field @focus="generateZn" v-model="zakazData.data" label="Дата оформления" prepend-inner-icon="mdi-calendar" readonly ></v-text-field>
+                </v-col>
+                
+                <v-col md = "3" cols = "12">
+                    <v-text-field v-model="zakazData.datafinal" label="Дата выполнения" prepend-inner-icon="mdi-calendar" ></v-text-field>
                 </v-col>
             </v-row>
 
@@ -111,6 +115,7 @@ export default {
             zakazData: {
                 zaknumber:"",
                 data:"",
+                datafinal:"",
                 name:"",
                 phone:"",
                 phone2:"",
