@@ -1,13 +1,21 @@
 <template>
   <v-container class = "pd-2" >
           
-          <v-row>
-            <v-col>
-              <v-form>
-                <v-text-field label="Введите запрос" prepend-inner-icon="mdi-magnify" ></v-text-field>
-              </v-form>
-            </v-col>
-          </v-row>
+          <v-form>
+            <v-row>
+              
+                <v-col md = "10" cols="12">
+                    <v-text-field @input="getTovarInBase" v-model = "serchStr" label="Введите запрос" prepend-inner-icon="mdi-magnify" ></v-text-field>                
+                </v-col>
+                
+                <v-col md = "2" cols="12">
+                    <v-btn width = "100%" class = "mt-3" color="success">
+                          <v-icon class="mr-2">mdi-minus-circle-outline</v-icon> Сбросить
+                    </v-btn>               
+                </v-col>
+              
+            </v-row>
+          </v-form>
 
           <v-row>
             <v-col>
@@ -33,8 +41,8 @@
                 <v-data-table
                 locale="ru-RU"
                 :headers="headers"
-                :items="desserts"
-                :items-per-page="5"
+                :items="zakazList"
+                :items-per-page="30"
                 item-key="name"
                 class="elevation-1"
                 :footer-props="{
@@ -46,56 +54,50 @@
                   itemsPerPageText:'Записей на странице',
                   pageText: '{0}-{1} из {2}'
                 }"
-              ></v-data-table>
+              >
+              
+                <template v-slot:item.action="{ item }">
+                  <v-icon @click="deleteZakaz(item)" >mdi-delete-outline</v-icon>
+                </template>
+
+              </v-data-table>
             </v-col>
           </v-row>
         </v-container>
 </template>
 
 <script>
+import axios from 'axios'
+import {mapGetters} from 'vuex'
 export default {
     data(){
         return {
             type:"month",
             events:[],
             showCalendar:false,
-
+            serchStr:"",
             headers: [
                 {
                     text: 'Номер заказа',
                     align: 'start',
-                    value: 'number',
+                    value: 'zak_numbet',
                 },
-                { text: 'Дата', value: 'data' },
-                { text: 'Клиент', value: 'contragent' },
+                { text: 'Дата', value: 'zak_data' },
+                { text: 'Дата выполнения', value: 'zak_final_data' },
+                { text: 'Клиент', value: 'klient_name' },
                 { text: 'Телефон', value: 'phone' },
-                { text: 'Сумма', value: 'summ' },
+                { text: 'Сумма', value: 'summa_sheta' },
+                { text: '', value: 'action' },
             ],
 
-            desserts: [
-                {
-                    number: 'LS_000213',
-                    data: '20.08.2021',
-                    contragent: 'Дизайнер Иванов',
-                    phone: '+7 903 633-08-01',
-                    summ: '35000',
-                },
-                {
-                    number: 'LS_000413',
-                    data: '22.08.2021',
-                    contragent: 'Клеткин',
-                    phone: '+7 903 633-08-01',
-                    summ: '135000',
-                },
-                {
-                    number: 'LS_040200',
-                    data: '03.01.2021',
-                    contragent: 'Петров',
-                    phone: '+7 903 333-08-01',
-                    summ: '15000',
-                }
+            zakazList: [
+                
             ],
         }
+    },
+
+    computed: {
+            ...mapGetters (["REST_API_PREFIX"])
     },
 
     methods: {
@@ -110,7 +112,48 @@ export default {
 
             this.events = ev;
             console.log(this.events);
+        },
+
+        deleteZakaz(item) {
+          console.log(item);
+        },
+
+        getTovarInBase() {
+          axios.get(this.REST_API_PREFIX + 'get_zakaz',
+                {
+                    params: {
+                        querystr: this.serchStr,
+                        status:"Новый"
+                    }
+                })
+                .then( (resp) => {
+                    this.zakazList = resp.data; 
+                    console.log(resp);
+                })
+
+                .catch((error) => {
+                    let rezText = "";
+                    if (error.response)
+                    {
+                        rezText = error.response.data.message;
+                    } else 
+                    if (error.request) {
+                        rezText = error.message;
+                    } else {
+                        rezText = error.message;
+                    }
+                    
+                    console.log(error.config);
+                    
+                    this.message = rezText
+                    this.showAlert = "error"
+                    this.showAlert = true
+                });
         }
+    },
+
+    created: function () {
+       this.getTovarInBase();
     }
 }
 </script>

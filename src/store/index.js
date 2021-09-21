@@ -18,6 +18,8 @@ export default new Vuex.Store ({
         loginState:"autorise", //Окно которое отображаетс на странице авторизации / регистрации
         // Поля для меню приложения
         showPanel:false
+
+
     },
 
     actions: {

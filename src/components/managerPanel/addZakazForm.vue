@@ -45,7 +45,7 @@
                     <v-text-field v-model="zakazData.shetn"  label="Номер счета" prepend-inner-icon="mdi-file-document" ></v-text-field>
                 </v-col>
                 <v-col md = "6" cols = "12">
-                    <v-text-field v-model="zakazData.shetsumm"  label="Сумма счета" prepend-inner-icon="mdi-currency-rub" ></v-text-field>
+                    <v-text-field v-model="zakazData.shetsumm"  label="Сумма счета" prepend-inner-icon="mdi-currency-rub" readonly></v-text-field>
                 </v-col>
             </v-row>
 
@@ -76,18 +76,13 @@
             </v-row>
             
             <v-row>
-                <v-col cols="12">
-                <v-alert
-                    border="right"
-                    colored-border
-                    :type = "alertType"
-                    elevation="2"
-                    v-show="showAlert"
-                    >{{message}}</v-alert>
-                    </v-col>
-                
+                <v-col>
+                    <v-btn width = "100%" @click="showDialog" color="secondary">
+                        <v-icon  class="mr-2">mdi-plus</v-icon> Добавить товар
+                    </v-btn>
+                </v-col>
             </v-row>
-            
+
             <v-row>
                 <v-col>
                     <v-textarea
@@ -101,21 +96,29 @@
 
             <add-tovar-dialog :show-dlg="addTovarDialogShow" :close-dlg="cloaseDlg" :add-to-zak = "addTovarToZak"></add-tovar-dialog>  
                 
+            <v-row>
+                <v-col cols="12">
+                    <v-alert
+                        border="right"
+                        colored-border
+                        :type = "alertType"
+                        elevation="2"
+                        v-show="showAlert"
+                    >{{message}}</v-alert>
+                </v-col>
+                
+            </v-row>
             
             <v-row>
-                <v-col md = "3" cols="12">
-                    <v-btn @click="showDialog" color="secondary">
-                        <v-icon  class="mr-2">mdi-plus</v-icon> Добавить товар
-                    </v-btn>
-                </v-col>
+                
 
-                <v-col md = "4" cols="12">
-                    <v-btn color="success">
-                        <v-icon class="mr-2">mdi-content-copy</v-icon> Копировать с другой датой
+                <v-col md = "6" cols="12">
+                    <v-btn @click.prevent="addZakToBase('Черновик')" color="success">
+                        <v-icon class="mr-2">mdi-content-copy</v-icon> Сохранить как черновик
                     </v-btn>
                 </v-col>
-                <v-col md = "3" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
-                    <v-btn  @click.prevent="addZakToBase" color="success">
+                <v-col md = "6" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
+                    <v-btn  @click.prevent="addZakToBase('Новый')" color="success">
                         <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
                     </v-btn>
                 </v-col>
@@ -149,7 +152,7 @@ export default {
                 phone2:"",
                 adr:"",
                 shetn:"",
-                shetsumm:"",
+                shetsumm:0,
                 comment:"",
                 zaktovars:[ 
                 
@@ -216,6 +219,12 @@ export default {
                 sale: element.sale,
                 summ: element.summ
             })
+
+            this.zakazData.shetsumm = 0;
+            this.zakazData.zaktovars.forEach(el => {
+                this.zakazData.shetsumm += el.summ
+            });
+            
         },
         generateZn() {
             var nowData = new Date();
@@ -223,7 +232,8 @@ export default {
             this.zakazData.data = new Date().toJSON().slice(0, 19).replace('T', ' ')
         },
 
-        addZakToBase() {
+        addZakToBase(status) {
+            console.log(this.zakazData.data);
             console.log(this.zakazData.datafinal);
             console.log(this.zakazData.adr);
             
@@ -232,7 +242,8 @@ export default {
                 axios.get(this.REST_API_PREFIX + 'add_zak',
                 {
                     params: {
-                        zakinfo: this.zakazData
+                        zakinfo: this.zakazData,
+                        status:status
                     }
                 })
                 .then( (resp) => {
