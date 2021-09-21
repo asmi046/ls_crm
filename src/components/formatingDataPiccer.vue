@@ -19,7 +19,7 @@
           v-bind="attrs"
           @blur="date = parseDate(dateFormatted)"
           v-on="on"
-           
+          readonly
          
         ></v-text-field>
       </template>

@@ -12,7 +12,8 @@
                 </v-col>
                 
                 <v-col md = "3" cols = "12">
-                    <v-text-field @focus="generateZn" v-model="zakazData.data" label="Дата оформления" prepend-inner-icon="mdi-calendar" readonly ></v-text-field>
+                    <!-- <v-text-field @focus="generateZn" v-model="zakazData.data" label="Дата оформления" prepend-inner-icon="mdi-calendar" readonly ></v-text-field> -->
+                    <formating-data-piccer v-model="zakazData.data" show-label = "Дата оформления"></formating-data-piccer>
                 </v-col>
                 
                 <v-col md = "3" cols = "12">
@@ -48,6 +49,7 @@
                 </v-col>
             </v-row>
 
+            
             <v-row>
                 <v-col>
                     <v-data-table
@@ -57,7 +59,19 @@
                         item-key="name"
                         class="elevation-1"
                         :hideDefaultFooter = "true"
-                    ></v-data-table>                    
+                    >
+                        <template v-slot:item.img="{ item }">
+                             <v-img
+                                max-height="50"
+                                max-width="50"
+                                :src="item.img"
+                                class="ma-1"
+                            ></v-img>
+                         </template>
+                         <template v-slot:item.action="{ index }">
+                             <v-icon @click="deleteTovElement(index)" >mdi-delete-outline</v-icon>
+                         </template>
+                    </v-data-table>                    
                 </v-col>
             </v-row>
             
@@ -74,6 +88,17 @@
                 
             </v-row>
             
+            <v-row>
+                <v-col>
+                    <v-textarea
+                        label="Комментарий к заказу"
+                        v-model = "zakazData.comment"
+                        hint="Введите комментарий к заказу"
+                        rows="2"
+                    ></v-textarea>
+                </v-col>
+            </v-row>
+
             <add-tovar-dialog :show-dlg="addTovarDialogShow" :close-dlg="cloaseDlg" :add-to-zak = "addTovarToZak"></add-tovar-dialog>  
                 
             
@@ -118,13 +143,14 @@ export default {
             zakazData: {
                 zaknumber:"",
                 data:"",
-                datafinal:this.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
+                datafinal:"",
                 name:"",
                 phone:"",
                 phone2:"",
                 adr:"",
                 shetn:"",
                 shetsumm:"",
+                comment:"",
                 zaktovars:[ 
                 
                 ]
@@ -145,10 +171,13 @@ export default {
             message: "",
 
             headers: [
+                {text: "Изображение", value: "img"},
                 {text: "Наименование", value: "name"},
                 {text: "Количество", value: "count"},
                 {text: "Цена", value: "price"},
-                {text: "Сумма", value: "summ"}
+                {text: "Скидка", value: "sale"},
+                {text: "Сумма", value: "summ"},
+                {text: "", value: "action"}
             ],
 
         }
@@ -165,19 +194,12 @@ export default {
 
 
     methods:{
-        formatDate (date) {
-            if (!date) return null
 
-            const [year, month, day] = date.split('-')
-            return `${month}.${day}.${year}`
+        deleteTovElement (index) {
+            console.log(index);
+            this.zakazData.zaktovars.splice(index, 1);
         },
 
-        parseDate (date) {
-            if (!date) return null
-
-            const [month, day, year] = date.split('.')
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-        },
         cloaseDlg() {
             this.addTovarDialogShow = false;
         },
@@ -191,6 +213,7 @@ export default {
                 name: element.name,
                 count: element.count,
                 price: element.price,
+                sale: element.sale,
                 summ: element.summ
             })
         },

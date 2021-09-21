@@ -33,7 +33,7 @@
                             :src="returnedData.img"
                         ></v-img>
                         </v-col>
-                        <v-col md = "4" cols = "12">
+                        <v-col md = "3" cols = "12">
                             <v-text-field
                                 v-model = "returnedData.name"
                                 @keyup="getBaseTovar"
@@ -53,6 +53,14 @@
                             <v-text-field
                                 v-model = "returnedData.price"
                                 label="Цена" 
+                            >
+                            </v-text-field>
+                        </v-col>
+                        
+                        <v-col md = "1" cols = "12">
+                            <v-text-field
+                                v-model = "returnedData.sale"
+                                label="Скидка" 
                             >
                             </v-text-field>
                         </v-col>
@@ -133,8 +141,9 @@ export default {
            returnedData:{
                img: require('../../assets/no_photo.png'),
                name: "",
-               count: 0,
+               count: 1,
                price: 0,
+               sale: 0,
                summ: 0,
            },
            tovName:"",
@@ -145,7 +154,7 @@ export default {
     computed: {
             ...mapGetters (["REST_API_PREFIX"]),
             calcSumm: function () {
-                return this.returnedData.count * this.returnedData.price
+                return (this.returnedData.sale === 0)?(this.returnedData.count * this.returnedData.price):(this.returnedData.count * this.returnedData.price *( 1 - this.returnedData.sale/100)) 
             } 
     },
 
@@ -156,6 +165,7 @@ export default {
                 name: this.returnedData.name,
                 count: this.returnedData.count,
                 price: this.returnedData.price,
+                sale: this.returnedData.sale,
                 summ: this.calcSumm
             });
             this.closeDlg();
