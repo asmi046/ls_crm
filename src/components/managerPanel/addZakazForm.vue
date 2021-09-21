@@ -16,7 +16,8 @@
                 </v-col>
                 
                 <v-col md = "3" cols = "12">
-                    <v-text-field v-model="zakazData.datafinal" label="Дата выполнения" prepend-inner-icon="mdi-calendar" ></v-text-field>
+                    <formating-data-piccer v-model="zakazData.datafinal" show-label = "Дата выполнения"></formating-data-piccer>
+         
                 </v-col>
             </v-row>
 
@@ -106,16 +107,18 @@
 import axios from 'axios';
 import {mapGetters} from 'vuex'
 import addTovarDialog from './addTovarDialog.vue';
+import FormatingDataPiccer from '../formatingDataPiccer.vue';
 
 export default {
-    components: { addTovarDialog },
+    components: { addTovarDialog, FormatingDataPiccer },
     data() {
         return {
+            menu:false,
             addTovarDialogShow:false,
             zakazData: {
                 zaknumber:"",
                 data:"",
-                datafinal:"",
+                datafinal:this.formatDate((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10)),
                 name:"",
                 phone:"",
                 phone2:"",
@@ -159,7 +162,22 @@ export default {
         this.generateZn()
     },
 
+
+
     methods:{
+        formatDate (date) {
+            if (!date) return null
+
+            const [year, month, day] = date.split('-')
+            return `${month}.${day}.${year}`
+        },
+
+        parseDate (date) {
+            if (!date) return null
+
+            const [month, day, year] = date.split('.')
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+        },
         cloaseDlg() {
             this.addTovarDialogShow = false;
         },
@@ -183,6 +201,9 @@ export default {
         },
 
         addZakToBase() {
+            console.log(this.zakazData.datafinal);
+            console.log(this.zakazData.adr);
+            
             if (this.$refs.addZakForm.validate())
             {
                 axios.get(this.REST_API_PREFIX + 'add_zak',
