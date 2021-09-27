@@ -2,10 +2,19 @@
   <v-container class = "pd-2" >
           
           <v-form>
-            <v-row>
+            <v-row class = "mb-3">
               
-                <v-col md = "10" cols="12">
-                    <v-text-field @input="getTovarInBase" v-model = "serchStr" label="Введите запрос" prepend-inner-icon="mdi-magnify" ></v-text-field>                
+                <v-col md = "8" cols="12">
+                    <v-text-field @input="getTovarInBase" hide-details = true v-model = "serchStr" label="Введите запрос" prepend-inner-icon="mdi-magnify" ></v-text-field>                
+                </v-col>
+                
+                <v-col md = "2" cols="12">
+                  <v-select
+                    v-model = "serchStatus"
+                    :items = "ORDER_STATUSES"
+                    label = "Со статусом"
+                    hide-details = true
+                  ></v-select>           
                 </v-col>
                 
                 <v-col md = "2" cols="12">
@@ -32,9 +41,20 @@
                   <v-calendar locale="ru"  :type = "type" :events = "events" @change="getEvents"></v-calendar>
                 </v-sheet>
             </v-col>
-
-
           </v-row>
+
+            <v-row>
+                <v-col cols="12">
+                    <v-alert
+                        border="right"
+                        colored-border
+                        :type = "alertType"
+                        elevation="2"
+                        v-show="showAlert"
+                    >{{message}}</v-alert>
+                </v-col>
+                
+            </v-row>
 
           <v-row>
             <v-col>
@@ -57,25 +77,33 @@
               >
               
                 <template v-slot:item.action="{ item }">
-                  <v-icon @click="deleteZakaz(item)" >mdi-delete-outline</v-icon>
+                  <v-icon title = "Редактировать заказ" class = "mr-2" @click="editZakaz(item)" >mdi-clipboard-edit-outline</v-icon>
+                  <v-icon title = "Сформировать коммерческое предложение" class = "mr-2" @click="editZakaz(item)" >mdi-cloud-print-outline</v-icon>
+                  <v-icon title = "Удалить заказ" class = "mr-2" @click="deleteZakaz(item)" >mdi-delete-outline</v-icon>
                 </template>
 
               </v-data-table>
             </v-col>
           </v-row>
+
+          <delete-dialog :delete-dialog-param = "deleteDialogParam"></delete-dialog>
+
         </v-container>
 </template>
 
 <script>
 import axios from 'axios'
 import {mapGetters} from 'vuex'
+import deleteDialog from '../deleteDialog.vue'
 export default {
+    components: { deleteDialog },
     data(){
         return {
             type:"month",
             events:[],
             showCalendar:false,
             serchStr:"",
+            serchStatus:"",
             headers: [
                 {
                     text: 'Номер заказа',
@@ -93,11 +121,63 @@ export default {
             zakazList: [
                 
             ],
+
+            alertType: "error",
+            showAlert: false,
+            message: "",
+
+            deleteDialogParam: {
+              showDialog:false,
+              id:"",
+              number:"",
+              closeDialog: () => {
+                  this.deleteDialogParam.showDialog = false;
+              },
+
+              deleteNumber: () => {
+                  axios.delete(this.REST_API_PREFIX + 'del_order',
+                  {
+                      params: {
+                          orderid: this.deleteDialogParam.id,
+                      }
+                  })
+                  .then( (resp) => {
+                    console.log(resp);
+                    this.getTovarInBase();
+                    this.message = "Данные успешно удалены"
+                    this.alertType = "success";
+                    this.showAlert = true;
+                    this.deleteDialogParam.showDialog = false;
+                  })
+
+                  .catch((error) => {
+                      let rezText = "";
+                      if (error.response)
+                      {
+                          rezText = error.response.data.message;
+                      } else 
+                      if (error.request) {
+                          rezText = error.message;
+                      } else {
+                          rezText = error.message;
+                      }
+                      
+                      console.log(error.config);
+                      console.log(rezText);
+
+                      this.message = rezText
+                      this.showAlert = "error"
+                      this.showAlert = true;
+
+                      this.deleteDialogParam.showDialog = false;
+                  });
+              }
+            },
         }
     },
 
     computed: {
-            ...mapGetters (["REST_API_PREFIX"])
+            ...mapGetters (["REST_API_PREFIX", "ORDER_STATUSES"])
     },
 
     methods: {
@@ -116,6 +196,9 @@ export default {
 
         deleteZakaz(item) {
           console.log(item);
+          this.deleteDialogParam.id = item.id
+          this.deleteDialogParam.number = item.zak_numbet
+          this.deleteDialogParam.showDialog = true
         },
 
         getTovarInBase() {
@@ -123,7 +206,7 @@ export default {
                 {
                     params: {
                         querystr: this.serchStr,
-                        status:"Новый"
+                        status: this.serchStatus
                     }
                 })
                 .then( (resp) => {

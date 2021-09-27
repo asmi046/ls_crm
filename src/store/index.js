@@ -17,8 +17,9 @@ export default new Vuex.Store ({
 
         loginState:"autorise", //Окно которое отображаетс на странице авторизации / регистрации
         // Поля для меню приложения
-        showPanel:false
-
+        showPanel:false,
+        // Статусы заказа
+        orderStatuses: ['Новый', 'Черновик', 'В работе', 'Архив']
 
     },
 
@@ -62,6 +63,10 @@ export default new Vuex.Store ({
     },
     
     getters: {
+        ORDER_STATUSES(state) {
+            return state.orderStatuses;
+        },
+
         SHOW_PANEL(state) {
             return state.showPanel;
         },
