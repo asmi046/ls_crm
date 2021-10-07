@@ -27,7 +27,7 @@
                     <v-text-field :rules="upp3Rules" v-model="zakazData.name" label="Клиент" prepend-inner-icon="mdi-account" req ></v-text-field>
                 </v-col>
                 <v-col md = "3"  cols="12">
-                    <v-text-field :rules="phoneRules" v-model="zakazData.phone" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone" ></v-text-field>
+                    <v-text-field  :rules="phoneRules" v-model="zakazData.phone" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone" ></v-text-field>
                 </v-col>
                 <v-col  md = "3" cols="12">
                     <v-text-field  :rules="phoneRules" v-model="zakazData.phone2" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone-outline" ></v-text-field>
@@ -40,12 +40,21 @@
                 </v-col>
             </v-row>
 
+
+            
             <v-row>
-                <v-col md = "6" cols = "12">
-                    <v-text-field v-model="zakazData.shetn"  label="Номер счета" prepend-inner-icon="mdi-file-document" ></v-text-field>
+                <v-col md = "2" cols = "12">
+                    <v-switch
+                    color="success"
+                    v-model="zakazData.beznal"
+                    label="Безналичный расчет"
+                    ></v-switch>
                 </v-col>
-                <v-col md = "6" cols = "12">
-                    <v-text-field v-model="zakazData.shetsumm"  label="Сумма счета" prepend-inner-icon="mdi-currency-rub" readonly></v-text-field>
+                <v-col md = "5" cols = "12">
+                    <v-text-field :disabled ="!zakazData.beznal" v-model="zakazData.shetn"  label="Номер счета 1С" prepend-inner-icon="mdi-file-document" ></v-text-field>
+                </v-col>
+                <v-col md = "5" cols = "12">
+                    <v-text-field :disabled ="!zakazData.beznal" v-model="zakazData.shetsumm"  label="Сумма счета 1С" prepend-inner-icon="mdi-currency-rub" readonly></v-text-field>
                 </v-col>
             </v-row>
 
@@ -75,6 +84,12 @@
                 </v-col>
             </v-row>
             
+            <v-row>
+                <v-col class="d-flex">
+                    <span class = "ml-auto"><strong>Итого: {{zakazData.totalsumm}} р.</strong></span>
+                </v-col>
+            </v-row>
+
             <v-row>
                 <v-col>
                     <v-btn width = "100%" @click="showDialog" color="secondary">
@@ -151,8 +166,10 @@ export default {
                 phone:"",
                 phone2:"",
                 adr:"",
+                beznal:false,
                 shetn:"",
                 shetsumm:0,
+                totalsumm:0,
                 comment:"",
                 zaktovars:[ 
                 

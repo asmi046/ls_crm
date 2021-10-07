@@ -114,7 +114,7 @@ export default {
                 { text: 'Дата выполнения', value: 'zak_final_data' },
                 { text: 'Клиент', value: 'klient_name' },
                 { text: 'Телефон', value: 'phone' },
-                { text: 'Сумма', value: 'summa_sheta' },
+                { text: 'Сумма', value: 'summa_sheta_1c' },
                 { text: '', value: 'action' },
             ],
 
