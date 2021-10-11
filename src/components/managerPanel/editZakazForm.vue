@@ -2,17 +2,16 @@
     <v-container class = "pd-2">
        <v-row>
             <v-col>
-                <h1>Создать заказ</h1>
+                <h1>Редактировать заказ</h1>
             </v-col>
         </v-row>
-        <v-form ref="addZakForm">
+        <v-form v-if = "MAIN_ORDER_LIST.length !== 0" ref="addZakForm">
             <v-row>
                 <v-col md = "6" cols = "12">
-                    <v-text-field @focus="generateZn" v-model="zakazData.zaknumber" label="Номер заказа" prepend-inner-icon="mdi-tag" readonly ></v-text-field>
+                    <v-text-field v-model="zakazData.zaknumber" label="Номер заказа" prepend-inner-icon="mdi-tag" readonly ></v-text-field>
                 </v-col>
                 
                 <v-col md = "3" cols = "12">
-                    <!-- <v-text-field @focus="generateZn" v-model="zakazData.data" label="Дата оформления" prepend-inner-icon="mdi-calendar" readonly ></v-text-field> -->
                     <formating-data-piccer v-model="zakazData.data" show-label = "Дата оформления"></formating-data-piccer>
                 </v-col>
                 
@@ -128,12 +127,12 @@
                 
 
                 <v-col md = "6" cols="12">
-                    <v-btn @click.prevent="addZakToBase('Черновик')" color="success">
+                    <v-btn @click.prevent="updateZakToBase('Черновик')" color="success">
                         <v-icon class="mr-2">mdi-content-copy</v-icon> Сохранить как черновик
                     </v-btn>
                 </v-col>
                 <v-col md = "6" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
-                    <v-btn  @click.prevent="addZakToBase('Новый')" color="success">
+                    <v-btn  @click.prevent="updateZakToBase('Новый')" color="success">
                         <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
                     </v-btn>
                 </v-col>
@@ -141,6 +140,11 @@
             </v-row>
         </v-form>
 
+        <v-row v-else > 
+            <v-col>
+                <p class="obrlnk">Данные не загружены <router-link :to = "{name:'service'}"> Вернуться на главную</router-link></p>
+            </v-col>
+        </v-row>
 
 
     </v-container>
@@ -206,11 +210,58 @@ export default {
     },
     
     computed: {
-            ...mapGetters (["REST_API_PREFIX"])
+            ...mapGetters (["REST_API_PREFIX", "MAIN_ORDER_LIST"])
     },
 
+
     created: function() {
-        this.generateZn()
+        console.log(this.MAIN_ORDER_LIST);
+        
+        if (this.MAIN_ORDER_LIST.length !== 0) {
+            let element = this.MAIN_ORDER_LIST.find((el) =>  el.zak_numbet === this.$route.params.number )
+
+            this.zakazData.mng_name = element.mng_name
+            this.zakazData.mng_mail = element.mng_mail
+            this.zakazData.zaknumber = element.zak_numbet
+            this.zakazData.data = element.zak_data
+            this.zakazData.datafinal = element.zak_final_data
+            this.zakazData.name = element.klient_name
+            this.zakazData.phone = element.phone
+            this.zakazData.phone2 = element.phone2
+            this.zakazData.adr = element.adres
+            this.zakazData.beznal = element.beznal
+            this.zakazData.shetn = element.summa_sheta_1c
+            this.zakazData.shetsumm = element.nomer_sheta_1c
+            this.zakazData.totalsumm = element.total_summ
+            this.zakazData.comment = element.comment
+
+                axios.get(this.REST_API_PREFIX + 'get_order_tovar',
+                {
+                    params: {
+                        orderid: this.$route.params.number,
+                    }
+                })
+                .then( (resp) => {
+                console.log(resp);
+                 this.zakazData.zaktovars = resp.data
+                })
+
+                .catch((error) => {
+                    let rezText = "";
+                    if (error.response)
+                    {
+                        rezText = error.response.data.message;
+                    } else 
+                    if (error.request) {
+                        rezText = error.message;
+                    } else {
+                        rezText = error.message;
+                    }
+                    
+                    console.log(error.config);
+                    console.log(rezText);
+            });
+        }
     },
 
 
@@ -248,25 +299,18 @@ export default {
             });
             
         },
-        generateZn() {
-            var nowData = new Date();
-            this.zakazData.zaknumber = "ZN_"+nowData.getDate()+"_"+nowData.getMonth()+"_"+nowData.getMilliseconds()+"_"+Math.floor(Math.random() * 1000);
-            this.zakazData.data = new Date().toJSON().slice(0, 19).replace('T', ' ')
-        },
 
-        addZakToBase(status) {
-            console.log(this.zakazData.data);
-            console.log(this.zakazData.datafinal);
-            console.log(this.zakazData.adr);
-            
+        updateZakToBase(status) {
+            console.log(this.$route.params.number);
+            console.log(this.zakazData);
             if (this.$refs.addZakForm.validate())
             {
-                axios.get(this.REST_API_PREFIX + 'add_zak',
+                axios.post(this.REST_API_PREFIX + 'update_zak',
                 {
-                    params: {
+                        zaknumber: this.$route.params.number,
                         zakinfo: this.zakazData,
                         status:status
-                    }
+        
                 })
                 .then( (resp) => {
                     this.message = "Данные добавленны"

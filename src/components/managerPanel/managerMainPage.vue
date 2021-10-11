@@ -61,7 +61,7 @@
                 <v-data-table
                 locale="ru-RU"
                 :headers="headers"
-                :items="zakazList"
+                :items="MAIN_ORDER_LIST"
                 :items-per-page="30"
                 item-key="name"
                 class="elevation-1"
@@ -76,9 +76,9 @@
                 }"
               >
               
-                <template v-slot:item.action="{ item }">
-                  <v-icon title = "Редактировать заказ" class = "mr-2" @click="editZakaz(item)" >mdi-clipboard-edit-outline</v-icon>
-                  <v-icon title = "Сформировать коммерческое предложение" class = "mr-2" @click="editZakaz(item)" >mdi-cloud-print-outline</v-icon>
+                <template v-slot:[`item.action`]="{ item }">
+                  <v-icon title = "Редактировать заказ" class = "mr-2" @click = "$router.push({name:'editzak', params: {number: item.zak_numbet}})" >mdi-clipboard-edit-outline</v-icon>
+                  <v-icon title = "Сформировать коммерческое предложение" class = "mr-2" @click = "$router.push({name:'kp', params: {number: item.zak_numbet}})" >mdi-cloud-print-outline</v-icon>
                   <v-icon title = "Удалить заказ" class = "mr-2" @click="deleteZakaz(item)" >mdi-delete-outline</v-icon>
                 </template>
 
@@ -177,7 +177,7 @@ export default {
     },
 
     computed: {
-            ...mapGetters (["REST_API_PREFIX", "ORDER_STATUSES"])
+      ...mapGetters (["REST_API_PREFIX", "ORDER_STATUSES", "MAIN_ORDER_LIST"])
     },
 
     methods: {
@@ -202,36 +202,7 @@ export default {
         },
 
         getTovarInBase() {
-          axios.get(this.REST_API_PREFIX + 'get_zakaz',
-                {
-                    params: {
-                        querystr: this.serchStr,
-                        status: this.serchStatus
-                    }
-                })
-                .then( (resp) => {
-                    this.zakazList = resp.data; 
-                    console.log(resp);
-                })
-
-                .catch((error) => {
-                    let rezText = "";
-                    if (error.response)
-                    {
-                        rezText = error.response.data.message;
-                    } else 
-                    if (error.request) {
-                        rezText = error.message;
-                    } else {
-                        rezText = error.message;
-                    }
-                    
-                    console.log(error.config);
-                    
-                    this.message = rezText
-                    this.showAlert = "error"
-                    this.showAlert = true
-                });
+          this.$store.dispatch('updateOrderList',  {serch_str: this.serchStr, serch_status: this.serchStatus});
         }
     },
 

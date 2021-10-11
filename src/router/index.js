@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 import autoriseComponent from '../components/autoriseComponent'
 import mainPage from '../components/mainPage'
+import kp from '../components/kp'
+import editZakazForm from '../components/managerPanel/editZakazForm'
 import addZakazForm from '../components/managerPanel/addZakazForm'
 import draftList from '../components/managerPanel/draftList'
 
@@ -25,8 +27,15 @@ let router = new VueRouter ( {
             {
                 path: '/add_zak',
                 name: 'addzak',
-                meta: {title: "Добавить заказ"},
+                meta: {title: "Создать заказ"},
                 component: addZakazForm
+            },
+            
+            {
+                path: '/edit_zak/:number?',
+                name: 'editzak',
+                meta: {title: "Редактировать заказ"},
+                component: editZakazForm
             },
             
             {
@@ -41,7 +50,15 @@ let router = new VueRouter ( {
                 name: 'login',
                 meta: {title: "Авторизация в LS CRM"},
                 component: autoriseComponent
+            },
+
+            {
+                path: '/kp/:number?',
+                name: 'kp',
+                meta: {title: "Коммерческое предложение"},
+                component: kp
             }
+
 
             
         ]

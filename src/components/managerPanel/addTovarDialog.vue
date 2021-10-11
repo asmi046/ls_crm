@@ -28,12 +28,13 @@
                     <v-row>
                         <v-col md = "1" cols = "12">
                         <v-img
-                            min-height="80"
-                            mmin-width="80"
+                            height="80"
+                            width="80"
+                            contain
                             :src="returnedData.img"
                         ></v-img>
                         </v-col>
-                        <v-col md = "3" cols = "12">
+                        <v-col md = "2" cols = "12">
                             <v-text-field
                                 v-model = "returnedData.name"
                                 @keyup="getBaseTovar"
@@ -43,13 +44,21 @@
                         </v-col>
                         <v-col md = "1" cols = "12">
                             <v-text-field
+                                v-model = "returnedData.sku"
+                                label="Арт." 
+                            >
+                            </v-text-field>
+                        </v-col>
+
+                        <v-col md = "1" cols = "12">
+                            <v-text-field
                                 v-model = "returnedData.count"
                                 label="Колличество" 
                             >
                             </v-text-field>
                         </v-col>
                         
-                        <v-col md = "2" cols = "12">
+                        <v-col md = "1" cols = "12">
                             <v-text-field
                                 v-model = "returnedData.price"
                                 label="Цена" 
@@ -65,10 +74,26 @@
                             </v-text-field>
                         </v-col>
 
-                        <v-col md = "2" cols = "12">
+                        <v-col md = "1" cols = "12">
                             <v-text-field
                                 v-model = "calcSumm"
                                 label="Сумма" 
+                            >
+                            </v-text-field>
+                        </v-col>
+
+                        <v-col md = "1" cols = "12">
+                            <v-select
+                                :items="nalItems"
+                                v-model="returnedData.nal"
+                                label="Наличие"
+                            ></v-select>
+                        </v-col>
+
+                        <v-col md = "1" cols = "12">
+                            <v-text-field
+                                v-model = "returnedData.comment"
+                                label="Комментарий" 
                             >
                             </v-text-field>
                         </v-col>
@@ -87,8 +112,7 @@
                                 @keyup="getBaseTovar"
                                 label="Поиск по базе" 
                                 prepend-inner-icon="mdi-magnify" 
-                            >
-                                
+                            >   
                             </v-text-field>
                         </v-col>
                     </v-row>
@@ -141,13 +165,18 @@ export default {
            returnedData:{
                img: require('../../assets/no_photo.png'),
                name: "",
+               sku: "",
                count: 1,
                price: 0,
                sale: 0,
                summ: 0,
+               nal:"Да",
+               comment:""
            },
            tovName:"",
-           baseArray:[]
+           baseArray:[],
+
+           nalItems:["Да", "Нет"]
         }
     },
 
@@ -163,16 +192,20 @@ export default {
             this.addToZak({
                 img: this.returnedData.img,
                 name: this.returnedData.name,
+                sku: this.returnedData.sku,
                 count: this.returnedData.count,
                 price: this.returnedData.price,
                 sale: this.returnedData.sale,
-                summ: this.calcSumm
+                summ: this.calcSumm,
+                nal: this.returnedData.nal,
+                comment: this.returnedData.comment
             });
             this.closeDlg();
         },
         selectTovar(item) {
             this.returnedData.img = item.lnk
             this.returnedData.name = item.name
+            this.returnedData.sku = item.sku
         },
         getBaseTovar() {
             console.log("Do search");

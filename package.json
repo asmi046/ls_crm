@@ -9,11 +9,11 @@
     "send_to_host": "cd dist && scp -C -r * u0743099@ftp.light-snab.ru:ls_crm/",
     "send_htaccess": "scp -r dist/.htaccess u0743099@ftp.light-snab.ru:ls_crm/.htaccess",
     "deploy": "npm run build && npm run send_to_host && npm run send_htaccess"
-  
   },
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "html2pdf.js": "^0.9.1",
     "v-mask": "^2.2.4",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.4",

@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import axios from 'axios';
 import Vuex from 'vuex'
 
 
@@ -19,11 +20,43 @@ export default new Vuex.Store ({
         // Поля для меню приложения
         showPanel:false,
         // Статусы заказа
-        orderStatuses: ['Новый', 'Черновик', 'В работе', 'Архив']
-
+        orderStatuses: ['Новый', 'Черновик', 'В работе', 'Архив'],
+        // Список заказов
+        orderList:[]
     },
 
     actions: {
+        updateOrderList(ctx, value) {
+            axios.get(ctx.state.rest_api_prefix + 'get_zakaz',
+            {
+                params: {
+                    querystr: value.serch_str,
+                    status: value.serch_status
+                }
+            })
+            .then( (resp) => {
+                ctx.commit('updateOrderList', resp.data);
+                console.log(resp.data); 
+            })
+
+            .catch((error) => {
+                let rezText = "";
+                if (error.response)
+                {
+                    rezText = error.response.data.message;
+                } else 
+                if (error.request) {
+                    rezText = error.message;
+                } else {
+                    rezText = error.message;
+                }
+                
+                console.log(error.config);
+                console.log(rezText);
+                
+            });
+        },
+
         showedPanel(ctx, value){
             ctx.commit('showedPanel', value);
         },
@@ -43,6 +76,10 @@ export default new Vuex.Store ({
     },
 
     mutations: {
+        updateOrderList(state, newVal) {
+            state.orderList = newVal;
+        },
+
         showedPanel(state, newVal) {
             state.showPanel = newVal;
         },
@@ -63,6 +100,9 @@ export default new Vuex.Store ({
     },
     
     getters: {
+        MAIN_ORDER_LIST(state) {
+            return state.orderList;
+        },
         ORDER_STATUSES(state) {
             return state.orderStatuses;
         },
