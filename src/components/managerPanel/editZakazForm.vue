@@ -76,6 +76,31 @@
                                 class="ma-1"
                             ></v-img>
                          </template>
+                         
+                         <template v-slot:[`item.count`]="{ item }">
+                             <v-text-field
+                                class="countFeild"
+                                v-model="item.count"
+                                @change="recalcZakTable"
+                            ></v-text-field>
+                         </template>
+
+                         <template v-slot:[`item.price`]="{ item }">
+                             <v-text-field
+                                class="priceFeild"
+                                v-model="item.price"
+                                @change="recalcZakTable"
+                            ></v-text-field>
+                         </template>
+
+                        <template v-slot:[`item.sale`]="{ item }">
+                             <v-text-field
+                                class="countFeild"
+                                v-model="item.sale"
+                                @change="recalcZakTable"
+                            ></v-text-field>
+                         </template>
+
                          <template v-slot:[`item.action`]="{ index }">
                              <v-icon @click="deleteTovElement(index)" >mdi-delete-outline</v-icon>
                          </template>
@@ -165,6 +190,7 @@ export default {
             zakazData: {
                 mng_name:localStorage.getItem("fio"),
                 mng_mail:localStorage.getItem("mail"),
+                zak_id:"",
                 zaknumber:"",
                 data:"",
                 datafinal:"",
@@ -220,6 +246,7 @@ export default {
         if (this.MAIN_ORDER_LIST.length !== 0) {
             let element = this.MAIN_ORDER_LIST.find((el) =>  el.zak_numbet === this.$route.params.number )
 
+            this.zakazData.zak_id = element.id
             this.zakazData.mng_name = element.mng_name
             this.zakazData.mng_mail = element.mng_mail
             this.zakazData.zaknumber = element.zak_numbet
@@ -267,7 +294,13 @@ export default {
 
 
     methods:{
-
+        recalcZakTable() {
+            this.zakazData.totalsumm = 0;
+            this.zakazData.zaktovars.forEach((elem) => {
+                elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
+                this.zakazData.totalsumm += parseFloat(elem.summ);
+            });
+        },
         deleteTovElement (index) {
             console.log(index);
             this.zakazData.zaktovars.splice(index, 1);
@@ -350,5 +383,10 @@ export default {
 </script>
 
 <style>
-
+.countFeild {
+    max-width: 50px;
+}
+.priceFeild {
+    max-width: 80px;
+}
 </style>

@@ -76,10 +76,35 @@
                                 :src="item.img"
                                 class="ma-1"
                             ></v-img>
-                         </template>
-                         <template v-slot:[`item.action`]="{ index }">
-                             <v-icon @click="deleteTovElement(index)" >mdi-delete-outline</v-icon>
-                         </template>
+                        </template>
+
+                        <template v-slot:[`item.count`]="{ item }">
+                             <v-text-field
+                                class="countFeild"
+                                v-model="item.count"
+                                @change="recalcZakTable"
+                            ></v-text-field>
+                        </template>
+
+                        <template v-slot:[`item.price`]="{ item }">
+                             <v-text-field
+                                class="priceFeild"
+                                v-model="item.price"
+                                @change="recalcZakTable"
+                            ></v-text-field>
+                        </template>
+
+                        <template v-slot:[`item.sale`]="{ item }">
+                             <v-text-field
+                                class="countFeild"
+                                v-model="item.sale"
+                                @change="recalcZakTable"
+                            ></v-text-field>
+                        </template>
+
+                        <template v-slot:[`item.action`]="{ index }">
+                            <v-icon @click="deleteTovElement(index)" >mdi-delete-outline</v-icon>
+                        </template>
                     </v-data-table>                    
                 </v-col>
             </v-row>
@@ -216,6 +241,16 @@ export default {
 
 
     methods:{
+
+
+        recalcZakTable() {
+            
+            this.zakazData.totalsumm = 0;
+            this.zakazData.zaktovars.forEach((elem) => {
+                elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
+                this.zakazData.totalsumm += parseFloat(elem.summ);
+            });
+        },
 
         deleteTovElement (index) {
             console.log(index);
