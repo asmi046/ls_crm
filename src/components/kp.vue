@@ -3,7 +3,7 @@
         <v-row>
             <v-col>
                 <v-btn :disabled="element === undefined" tile color="success" @click="toPDF()"><v-icon left>mdi-file-document-outline</v-icon> Сохранить в PDF</v-btn>
-                <v-btn tile color="success" @click="tableToExcel()"><v-icon left>mdi-file-document-outline</v-icon> Сохранить в excel</v-btn>
+                <v-btn tile color="success" class = "ml-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/kp.php?number='+element.zak_numbet"><v-icon left>mdi-microsoft-excel</v-icon> Сохранить в excel</v-btn>
             </v-col>
         </v-row>
         
