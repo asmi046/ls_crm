@@ -37,8 +37,31 @@
           
           <v-row v-show = "showCalendar">
             <v-col>
+                <div class="calendarAction">
+                  
+                  <v-btn fab text small color="grey darken-2" @click="$refs.calendar.prev()">
+                    <v-icon small>mdi-chevron-left</v-icon>
+                  </v-btn>
+
+                  <div v-if="$refs.calendar">
+                    {{ $refs.calendar.title }}
+                  </div>
+
+                  <v-btn fab text small color="grey darken-2" @click="$refs.calendar.next()">
+                    <v-icon small>mdi-chevron-right</v-icon>
+                  </v-btn>
+
+                </div>
                 <v-sheet width="100%">
-                  <v-calendar locale="ru"  :type = "type" :events = "events" @change="getEvents"></v-calendar>
+                  <v-calendar 
+                    locale="ru"
+                    v-model="focus"
+                    :type = "type" 
+                    :events = "events" 
+                    @change="getEvents"
+                    @click:event="editZakaz"
+                    ref="calendar"
+                    ></v-calendar>
                 </v-sheet>
             </v-col>
           </v-row>
@@ -99,6 +122,7 @@ export default {
     components: { deleteDialog },
     data(){
         return {
+            focus: '',
             type:"month",
             events:[],
             showCalendar:false,
@@ -181,17 +205,24 @@ export default {
     },
 
     methods: {
+        editZakaz({ event }) {
+          this.$router.push({name:'editzak', params: {number: event.name}})
+        },
         getEvents () {
-            console.log("ddd");
-            let ev =[];
-            ev.push({
-            name:"Событие #1",
-            start:new Date(),
+            
+            let ev = [];
 
-            });
+            for (let i = 0; i<this.MAIN_ORDER_LIST.length; i++) {
+              ev.push({
+                name: this.MAIN_ORDER_LIST[i].zak_numbet,
+              
+                start:new Date(this.MAIN_ORDER_LIST[i].zak_final_data),
+              });
+            }
+
+            
 
             this.events = ev;
-            console.log(this.events);
         },
 
         deleteZakaz(item) {
@@ -213,5 +244,10 @@ export default {
 </script>
 
 <style>
-
+  .calendarAction {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
 </style>
