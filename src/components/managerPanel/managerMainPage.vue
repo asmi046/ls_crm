@@ -13,12 +13,13 @@
                     v-model = "serchStatus"
                     :items = "ORDER_STATUSES"
                     label = "Со статусом"
-                    hide-details = true
+                    hide-details = true,
+                    @change="getTovarInBase"
                   ></v-select>           
                 </v-col>
                 
                 <v-col md = "2" cols="12">
-                    <v-btn width = "100%" class = "mt-3" color="success">
+                    <v-btn @click="serchStatus = ''; serchStatus = ''; getTovarInBase()" width = "100%" class = "mt-3" color="success">
                           <v-icon class="mr-2">mdi-minus-circle-outline</v-icon> Сбросить
                     </v-btn>               
                 </v-col>
@@ -138,7 +139,9 @@ export default {
                 { text: 'Дата выполнения', value: 'zak_final_data' },
                 { text: 'Клиент', value: 'klient_name' },
                 { text: 'Телефон', value: 'phone' },
-                { text: 'Сумма', value: 'summa_sheta_1c' },
+                { text: 'Сумма (нал.)', value: 'total_summ' },
+                { text: 'Сумма (1C)', value: 'summa_sheta_1c' },
+                { text: 'Статус', value: 'status' },
                 { text: '', value: 'action' },
             ],
 
@@ -213,9 +216,17 @@ export default {
             let ev = [];
 
             for (let i = 0; i<this.MAIN_ORDER_LIST.length; i++) {
+              let color = "#a1a1a1"
+
+              if (this.MAIN_ORDER_LIST[i].status === "Новый")
+                color = "#347815"
+              
+              if (this.MAIN_ORDER_LIST[i].status === "Черновик")
+                color = "#707070"
+
               ev.push({
                 name: this.MAIN_ORDER_LIST[i].zak_numbet,
-              
+                color: color,
                 start:new Date(this.MAIN_ORDER_LIST[i].zak_final_data),
               });
             }

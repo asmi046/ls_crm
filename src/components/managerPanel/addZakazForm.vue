@@ -224,6 +224,8 @@ export default {
                 {text: "Цена", value: "price"},
                 {text: "Скидка", value: "sale"},
                 {text: "Сумма", value: "summ"},
+                {text: "Един.", value: "edin"},
+                {text: "Наличие", value: "nal"},
                 {text: "", value: "action"}
             ],
 
@@ -273,6 +275,7 @@ export default {
                 price: element.price,
                 sale: element.sale,
                 summ: element.summ,
+                edin:element.edin,
                 nal:element.nal,
                 comment:element.comment
             })

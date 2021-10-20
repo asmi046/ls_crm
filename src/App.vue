@@ -62,7 +62,7 @@ export default {
     itemsMeny: [
         {text: 'Главная', icon: 'mdi-home', to: "/"},
         {text: 'Создать заказ', icon: 'mdi-file-document-outline', to: {name:'addzak'}},
-        {text: 'Черновики', icon: 'mdi-file-alert-outline', to: {name:'draft'}}
+        {text: 'База товаров', icon: 'mdi-file-alert-outline', to: {name:'addtovtobase'}}
     ],
   }),
 

@@ -6,7 +6,7 @@ import mainPage from '../components/mainPage'
 import kp from '../components/kp'
 import editZakazForm from '../components/managerPanel/editZakazForm'
 import addZakazForm from '../components/managerPanel/addZakazForm'
-import draftList from '../components/managerPanel/draftList'
+import tovarToBase from '../components/managerPanel/tovarToBase'
 
 
 import store from '../store';
@@ -39,10 +39,10 @@ let router = new VueRouter ( {
             },
             
             {
-                path: '/draft',
-                name: 'draft',
-                meta: {title: "Черновики заказов"},
-                component: draftList
+                path: '/add_tov_to_base',
+                name: 'addtovtobase',
+                meta: {title: "Добавление товаров в базу"},
+                component: tovarToBase
             },
 
             {

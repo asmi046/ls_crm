@@ -34,7 +34,7 @@
                             :src="returnedData.img"
                         ></v-img>
                         </v-col>
-                        <v-col md = "2" cols = "12">
+                        <v-col md = "1" cols = "12">
                             <v-text-field
                                 v-model = "returnedData.name"
                                 @keyup="getBaseTovar"
@@ -80,6 +80,14 @@
                                 label="Сумма" 
                             >
                             </v-text-field>
+                        </v-col>
+
+                        <v-col md = "1" cols = "12">
+                            <v-select
+                                :items="['Шт', 'М']"
+                                v-model="returnedData.edin"
+                                label="Единицы"
+                            ></v-select>
                         </v-col>
 
                         <v-col md = "1" cols = "12">
@@ -170,6 +178,7 @@ export default {
                price: 0,
                sale: 0,
                summ: 0,
+               edin:"Шт",
                nal:"Да",
                comment:""
            },
@@ -197,6 +206,7 @@ export default {
                 price: this.returnedData.price,
                 sale: this.returnedData.sale,
                 summ: this.calcSumm,
+                edin: this.returnedData.edin,
                 nal: this.returnedData.nal,
                 comment: this.returnedData.comment
             });
