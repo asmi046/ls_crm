@@ -1,5 +1,5 @@
 <template>
-  <v-container class = "pd-2" >
+  <v-container class = "pd-1 wa-xl-" >
           
           <v-form>
             <v-row class = "mb-3">
@@ -29,7 +29,7 @@
 
           <v-row>
             <v-col>
-              <v-btn tile :color="(!showCalendar)?'success':'error'"  @click.prevent="showCalendar = !showCalendar">
+              <v-btn tile :color="(!showCalendar)?'success':'error'"  @click.prevent="showCalendar = !showCalendar; if (events.length == 0) getEvents()">
                 <v-icon left>mdi-calendar</v-icon>
                   <span v-text = "(!showCalendar)?'Показать календарь':'Скрыть календарь'">Показать календарь</span>
               </v-btn>              
@@ -244,7 +244,7 @@ export default {
         },
 
         getTovarInBase() {
-          this.$store.dispatch('updateOrderList',  {serch_str: this.serchStr, serch_status: this.serchStatus});
+          this.$store.dispatch('updateOrderList',  {serch_str: this.serchStr, serch_status: this.serchStatus})
         }
     },
 
@@ -255,10 +255,12 @@ export default {
 </script>
 
 <style>
+
   .calendarAction {
     width: 100%;
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
   }
+
 </style>

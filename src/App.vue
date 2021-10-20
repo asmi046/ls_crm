@@ -73,3 +73,17 @@ export default {
   }
 };
 </script>
+
+<style>
+  @media (min-width: 1264px){
+    .container {
+        max-width: 96%;
+    }
+  }
+
+  @media (min-width: 960px){
+    .container {
+        max-width: 96%;
+    }
+  }
+</style>

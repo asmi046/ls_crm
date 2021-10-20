@@ -1,5 +1,5 @@
 <template>
-    <v-container class = "pd-2">
+    <v-container class = "pd-1">
        <v-row>
             <v-col>
                 <h1>Создать заказ</h1>
@@ -310,6 +310,11 @@ export default {
                     this.message = "Данные добавленны"
                     this.alertType = "success";
                     this.showAlert = true;
+
+                    this.$refs.addZakForm.reset()
+                    this.zakazData.zaktovars = []
+                    this.generateZn()
+
                     console.log(resp);
                 })
 
