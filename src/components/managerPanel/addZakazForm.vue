@@ -30,7 +30,7 @@
                     <v-text-field  :rules="phoneRules" v-model="zakazData.phone" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone" ></v-text-field>
                 </v-col>
                 <v-col  md = "3" cols="12">
-                    <v-text-field  :rules="phoneRules" v-model="zakazData.phone2" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone-outline" ></v-text-field>
+                    <v-text-field v-model="zakazData.phone2" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone-outline" ></v-text-field>
                 </v-col>
             </v-row>
                 
