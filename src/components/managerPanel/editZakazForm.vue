@@ -151,14 +151,19 @@
             <v-row>
                 
 
-                <v-col md = "6" cols="12">
+                <v-col md = "4" cols="12">
                     <v-btn @click.prevent="updateZakToBase('Черновик')" color="success">
                         <v-icon class="mr-2">mdi-content-copy</v-icon> Сохранить как черновик
                     </v-btn>
                 </v-col>
-                <v-col md = "6" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
+                <v-col md = "4" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
                     <v-btn  @click.prevent="updateZakToBase('Новый')" color="success">
                         <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
+                    </v-btn>
+                </v-col>
+
+                <v-col md = "4" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
+                    <v-btn tile color="success" class = "ml-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/kp.php?number='+this.$route.params.number">                        <v-icon left>mdi-microsoft-excel</v-icon> Сохранить КП
                     </v-btn>
                 </v-col>
 
@@ -229,6 +234,7 @@ export default {
                 {text: "Цена", value: "price"},
                 {text: "Скидка", value: "sale"},
                 {text: "Сумма", value: "summ"},
+                {text: "Комментарий", value: "comment"},
                 {text: "", value: "action"}
             ],
 
