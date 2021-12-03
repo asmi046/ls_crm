@@ -33,6 +33,7 @@ class allLibs {
           localStorage.setItem('dolgnost', response.data.dolgnost); 
           localStorage.setItem('seans_length', response.data.seans_length); 
           localStorage.setItem('token', response.data.token);
+          localStorage.setItem('status', response.data.status);
 
           store.dispatch('chengeAutorise',  true);
           store.dispatch('chengeUserName',  response.data.fio);
@@ -71,6 +72,7 @@ class allLibs {
       localStorage.removeItem('dolgnost'); 
       localStorage.removeItem('seans_length'); 
       localStorage.removeItem('token');
+      localStorage.removeItem('status');
 
       store.dispatch('chengeAutorise',  false);
       

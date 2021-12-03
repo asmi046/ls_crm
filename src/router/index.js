@@ -68,7 +68,7 @@ let router = new VueRouter ( {
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
        
-     let autorise = allLibs.getCookie("servautorise"); 
+    let autorise = allLibs.getCookie("servautorise"); 
     if (autorise != undefined) 
     {
         store.dispatch('chengeAutorise',  true);
