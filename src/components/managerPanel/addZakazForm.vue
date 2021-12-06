@@ -102,6 +102,30 @@
                             ></v-text-field>
                         </template>
 
+                        <template v-slot:[`item.edin`]="{ item }">
+                            <v-select
+                                :items="['Шт', 'М']"
+                                v-model="item.edin"
+                                label="Единицы"
+                            ></v-select>
+                         </template>
+
+                         <template v-slot:[`item.nal`]="{ item }">
+                            <v-select
+                                :items="['Да', 'Нет']"
+                                v-model="item.edin"
+                                label="Наличие"
+                            ></v-select>
+                         </template>
+
+                         
+                         <template v-slot:[`item.comment`]="{ item }">
+                             <v-text-field
+                                v-model="item.comment"
+                                label="Комментарий"
+                            ></v-text-field>
+                         </template>
+
                         <template v-slot:[`item.action`]="{ index }">
                             <v-icon @click="deleteTovElement(index)" >mdi-delete-outline</v-icon>
                         </template>
@@ -220,12 +244,14 @@ export default {
             headers: [
                 {text: "Изображение", value: "img"},
                 {text: "Наименование", value: "name"},
+                {text: "Артикул", value: "sku"},
                 {text: "Количество", value: "count"},
                 {text: "Цена", value: "price"},
                 {text: "Скидка", value: "sale"},
                 {text: "Сумма", value: "summ"},
                 {text: "Един.", value: "edin"},
                 {text: "Наличие", value: "nal"},
+                {text: "Комментарий", value: "comment"},
                 {text: "", value: "action"}
             ],
 
@@ -246,7 +272,6 @@ export default {
 
 
         recalcZakTable() {
-            
             this.zakazData.totalsumm = 0;
             this.zakazData.zaktovars.forEach((elem) => {
                 elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
@@ -257,6 +282,7 @@ export default {
         deleteTovElement (index) {
             console.log(index);
             this.zakazData.zaktovars.splice(index, 1);
+            this.recalcZakTable();
         },
 
         cloaseDlg() {
@@ -280,10 +306,7 @@ export default {
                 comment:element.comment
             })
 
-            this.zakazData.totalsumm = 0;
-            this.zakazData.zaktovars.forEach(el => {
-                this.zakazData.totalsumm += el.summ
-            });
+        this.recalcZakTable();
             
         },
         generateZn() {

@@ -4,6 +4,7 @@
             width = "80%"
             
             hide-overlay
+            @click:outside="closeDlg"
             transition="dialog-bottom-transition"
         >
             <v-card>
@@ -25,94 +26,7 @@
                     
                 </v-toolbar>
                 <v-container width = "100%">
-                    <v-row>
-                        <v-col md = "1" cols = "12">
-                        <v-img
-                            height="80"
-                            width="80"
-                            contain
-                            :src="returnedData.img"
-                        ></v-img>
-                        </v-col>
-                        <v-col md = "1" cols = "12">
-                            <v-text-field
-                                v-model = "returnedData.name"
-                                @keyup="getBaseTovar"
-                                label="Наименование" 
-                            >
-                            </v-text-field>
-                        </v-col>
-                        <v-col md = "1" cols = "12">
-                            <v-text-field
-                                v-model = "returnedData.sku"
-                                label="Арт." 
-                            >
-                            </v-text-field>
-                        </v-col>
 
-                        <v-col md = "1" cols = "12">
-                            <v-text-field
-                                v-model = "returnedData.count"
-                                label="Колличество" 
-                            >
-                            </v-text-field>
-                        </v-col>
-                        
-                        <v-col md = "1" cols = "12">
-                            <v-text-field
-                                v-model = "returnedData.price"
-                                label="Цена" 
-                            >
-                            </v-text-field>
-                        </v-col>
-                        
-                        <v-col md = "1" cols = "12">
-                            <v-text-field
-                                v-model = "returnedData.sale"
-                                label="Скидка" 
-                            >
-                            </v-text-field>
-                        </v-col>
-
-                        <v-col md = "1" cols = "12">
-                            <v-text-field
-                                v-model = "calcSumm"
-                                label="Сумма" 
-                            >
-                            </v-text-field>
-                        </v-col>
-
-                        <v-col md = "1" cols = "12">
-                            <v-select
-                                :items="['Шт', 'М']"
-                                v-model="returnedData.edin"
-                                label="Единицы"
-                            ></v-select>
-                        </v-col>
-
-                        <v-col md = "1" cols = "12">
-                            <v-select
-                                :items="nalItems"
-                                v-model="returnedData.nal"
-                                label="Наличие"
-                            ></v-select>
-                        </v-col>
-
-                        <v-col md = "1" cols = "12">
-                            <v-text-field
-                                v-model = "returnedData.comment"
-                                label="Комментарий" 
-                            >
-                            </v-text-field>
-                        </v-col>
-
-                        <v-col class = "d-flex justify-end" md = "2" cols = "12">
-                            <v-btn @click="addToZakMain" class = "ml"  color="success">
-                                <v-icon  class="mr-2">mdi-plus</v-icon> в заказ
-                            </v-btn>
-                        </v-col>
-                    </v-row>
-                    
                     <v-row>
                         <v-col>
                             <v-text-field
@@ -142,16 +56,30 @@
 
                                     <div class="control">
                                         <v-btn
+                                        v-if = "item.addet == false"
                                         class="mx-2"
                                         fab
                                         height="30px"
                                         width="30px"
                                         color="success"
+                                        
                                         @click="selectTovar(item)"
                                         >
-                                        <v-icon dark>
-                                            mdi-plus
-                                        </v-icon>
+                                            <v-icon dark>
+                                                mdi-plus
+                                            </v-icon>
+                                        </v-btn>
+                                        <v-btn
+                                        v-else
+                                        class="mx-2"
+                                        fab
+                                        height="30px"
+                                        width="30px"
+                                        color="secondary"
+                                        >
+                                            <v-icon dark>
+                                                mdi-check
+                                            </v-icon>
                                         </v-btn>
                                     </div>
                                 </div>
@@ -170,22 +98,10 @@ export default {
     props: ['showDlg','closeDlg','addToZak'],
     data() {
         return {
-           returnedData:{
-               img: require('../../assets/no_photo.png'),
-               name: "",
-               sku: "",
-               count: 1,
-               price: 0,
-               sale: 0,
-               summ: 0,
-               edin:"Шт",
-               nal:"Да",
-               comment:""
-           },
+
            tovName:"",
            baseArray:[],
 
-           nalItems:["Да", "Нет"]
         }
     },
 
@@ -197,25 +113,22 @@ export default {
     },
 
     methods:{
-        addToZakMain() {
-            this.addToZak({
-                img: this.returnedData.img,
-                name: this.returnedData.name,
-                sku: this.returnedData.sku,
-                count: this.returnedData.count,
-                price: this.returnedData.price,
-                sale: this.returnedData.sale,
-                summ: this.calcSumm,
-                edin: this.returnedData.edin,
-                nal: this.returnedData.nal,
-                comment: this.returnedData.comment
-            });
-            this.closeDlg();
-        },
+
+
         selectTovar(item) {
-            this.returnedData.img = item.lnk
-            this.returnedData.name = item.name
-            this.returnedData.sku = item.sku
+            this.addToZak({
+                img: item.lnk,
+                name: item.name,
+                sku: item.sku,
+                count: 1,
+                price: 0,
+                sale: 0,
+                summ: 0,
+                edin: "Шт",
+                nal: "Да",
+                comment: ""
+            })
+            item.addet = true
         },
         getBaseTovar() {
             console.log("Do search");

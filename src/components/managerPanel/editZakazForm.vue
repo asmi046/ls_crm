@@ -29,7 +29,7 @@
                     <v-text-field  :rules="phoneRules" v-model="zakazData.phone" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone" ></v-text-field>
                 </v-col>
                 <v-col  md = "3" cols="12">
-                    <v-text-field  :rules="phoneRules" v-model="zakazData.phone2" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone-outline" ></v-text-field>
+                    <v-text-field  v-model="zakazData.phone2" v-mask="'+# (###) ###-##-##'" label="Телефон" prepend-inner-icon="mdi-card-account-phone-outline" ></v-text-field>
                 </v-col>
             </v-row>
                 
@@ -64,7 +64,7 @@
                         dense
                         :headers="headers"
                         :items="zakazData.zaktovars"
-                        item-key="name"
+                        item-key="sku"
                         class="elevation-1"
                         :hideDefaultFooter = "true"
                     >
@@ -98,6 +98,31 @@
                                 class="countFeild"
                                 v-model="item.sale"
                                 @change="recalcZakTable"
+                            ></v-text-field>
+                         </template>
+
+                         <template v-slot:[`item.edin`]="{ item }">
+                            <v-select
+                                :items="['Шт', 'М']"
+                                v-model="item.edin"
+                                label="Единицы"
+                                class = "table_select"
+                            ></v-select>
+                         </template>
+
+                         <template v-slot:[`item.nal`]="{ item }">
+                            <v-select
+                                :items="['Да', 'Нет']"
+                                v-model="item.nal"
+                                label="Наличие"
+                                class = "table_select"
+                            ></v-select>
+                         </template>
+
+                         <template v-slot:[`item.comment`]="{ item }">
+                             <v-text-field
+                                v-model="item.comment"
+                                label="Комментарий"
                             ></v-text-field>
                          </template>
 
@@ -163,7 +188,8 @@
                 </v-col>
 
                 <v-col md = "4" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
-                    <v-btn tile color="success" class = "ml-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/kp.php?number='+this.$route.params.number">                        <v-icon left>mdi-microsoft-excel</v-icon> Сохранить КП
+                    <v-btn tile color="success" class = "ml-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/kp.php?number='+this.$route.params.number">                        
+                        <v-icon left>mdi-microsoft-excel</v-icon> Скачать КП
                     </v-btn>
                 </v-col>
 
@@ -230,10 +256,13 @@ export default {
             headers: [
                 {text: "Изображение", value: "img"},
                 {text: "Наименование", value: "name"},
+                {text: "Артикул", value: "sku"},
                 {text: "Количество", value: "count"},
                 {text: "Цена", value: "price"},
                 {text: "Скидка", value: "sale"},
                 {text: "Сумма", value: "summ"},
+                {text: "Един.", value: "edin"},
+                {text: "Наличие", value: "nal"},
                 {text: "Комментарий", value: "comment"},
                 {text: "", value: "action"}
             ],
@@ -262,7 +291,7 @@ export default {
             this.zakazData.phone = element.phone
             this.zakazData.phone2 = element.phone2
             this.zakazData.adr = element.adres
-            this.zakazData.beznal = element.beznal
+            this.zakazData.beznal = (element.beznal == 0)?false:true
             this.zakazData.shetn = element.summa_sheta_1c
             this.zakazData.shetsumm = element.nomer_sheta_1c
             this.zakazData.totalsumm = element.total_summ
@@ -310,6 +339,7 @@ export default {
         deleteTovElement (index) {
             console.log(index);
             this.zakazData.zaktovars.splice(index, 1);
+            this.recalcZakTable();
         },
 
         cloaseDlg() {
@@ -328,14 +358,12 @@ export default {
                 price: element.price,
                 sale: element.sale,
                 summ: element.summ,
+                edin:element.edin,
                 nal:element.nal,
                 comment:element.comment
             })
 
-            this.zakazData.totalsumm = 0;
-            this.zakazData.zaktovars.forEach(el => {
-                this.zakazData.totalsumm += el.summ
-            });
+            this.recalcZakTable();
             
         },
 
@@ -394,5 +422,9 @@ export default {
 }
 .priceFeild {
     max-width: 80px;
+}
+
+.table_select {
+    max-width: 100px;
 }
 </style>
