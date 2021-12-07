@@ -201,7 +201,7 @@
                 </v-col>
             </v-row>
         
-            <zak-perenos></zak-perenos>
+            <zak-perenos :old-zak-number = "zakazData.zaknumber"></zak-perenos>
 
         </v-form>
 
