@@ -176,6 +176,7 @@ import axios from 'axios';
 import {mapGetters} from 'vuex'
 import addTovarDialog from './addTovarDialog.vue';
 import FormatingDataPiccer from '../formatingDataPiccer.vue';
+import allLibs from '../../lib/libs';
 
 export default {
     components: { addTovarDialog, FormatingDataPiccer },
@@ -243,7 +244,10 @@ export default {
 
 
     methods:{
-
+        generateZn() {
+            this.zakazData.zaknumber = allLibs.getZn()
+            this.zakazData.data = new Date().toJSON().slice(0, 19).replace('T', ' ')
+        },
 
         recalcZakTable() {
             
@@ -286,11 +290,7 @@ export default {
             });
             
         },
-        generateZn() {
-            var nowData = new Date();
-            this.zakazData.zaknumber = "ZN_"+nowData.getDate()+"_"+nowData.getMonth()+"_"+nowData.getMilliseconds()+"_"+Math.floor(Math.random() * 1000);
-            this.zakazData.data = new Date().toJSON().slice(0, 19).replace('T', ' ')
-        },
+
 
         addZakToBase(status) {
             console.log(this.zakazData.data);

@@ -168,6 +168,15 @@
                 </v-col>
 
             </v-row>
+
+            <v-row>
+                <v-col>
+                    <h2>Перенос заказа на другую дату</h2>        
+                </v-col>
+            </v-row>
+        
+            <zak-perenos></zak-perenos>
+
         </v-form>
 
         <v-row v-else > 
@@ -176,6 +185,7 @@
             </v-col>
         </v-row>
 
+        
 
     </v-container>
 </template>
@@ -184,10 +194,11 @@
 import axios from 'axios';
 import {mapGetters} from 'vuex'
 import addTovarDialog from './addTovarDialog.vue';
+import zakPerenos from './zakPerenos.vue';
 import FormatingDataPiccer from '../formatingDataPiccer.vue';
 
 export default {
-    components: { addTovarDialog, FormatingDataPiccer },
+    components: { addTovarDialog, FormatingDataPiccer, zakPerenos},
     data() {
         return {
             menu:false,
