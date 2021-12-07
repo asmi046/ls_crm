@@ -16,6 +16,11 @@ class allLibs {
           return undefined;
     }
 
+    getZn() {
+      var nowData = new Date();
+      return "ZN_"+nowData.getDate()+"_"+nowData.getMonth()+"_"+nowData.getMilliseconds()+"_"+Math.floor(Math.random() * 1000);
+    }
+
     loginUser(response, savePassword,password) {
     console.log(response.data);
           var d = new Date();
