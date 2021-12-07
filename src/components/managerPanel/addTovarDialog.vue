@@ -86,6 +86,23 @@
                             </div>
                         </v-col>
                     </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-btn
+                            tile
+                            :color="(!showAddToBase)?'success':'secondary'"
+                            @click.prevent="showAddToBase = !showAddToBase"
+                            >
+                            <v-icon left>mdi-database-export</v-icon>
+                            Новый товаров в базу
+                            </v-btn>
+                        </v-col>
+                    </v-row>
+                    <v-row v-show="showAddToBase">
+                        <v-col>
+                            <tovar-to-base></tovar-to-base>
+                        </v-col>
+                    </v-row>
                 </v-container>
             </v-card>
     </v-dialog>
@@ -94,11 +111,13 @@
 <script>
 import axios from 'axios';
 import {mapGetters} from 'vuex'
+import tovarToBase from './tovarToBase.vue';
 export default {
+    components: { tovarToBase },
     props: ['showDlg','closeDlg','addToZak'],
     data() {
         return {
-
+           showAddToBase:false,
            tovName:"",
            baseArray:[],
 
