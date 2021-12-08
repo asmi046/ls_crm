@@ -113,7 +113,7 @@
                          <template v-slot:[`item.nal`]="{ item }">
                             <v-select
                                 :items="['Да', 'Нет']"
-                                v-model="item.edin"
+                                v-model="item.nal"
                                 label="Наличие"
                             ></v-select>
                          </template>

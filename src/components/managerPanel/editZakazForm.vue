@@ -303,8 +303,8 @@ export default {
             this.zakazData.phone2 = element.phone2
             this.zakazData.adr = element.adres
             this.zakazData.beznal = (element.beznal == 0)?false:true
-            this.zakazData.shetn = element.summa_sheta_1c
-            this.zakazData.shetsumm = element.nomer_sheta_1c
+            this.zakazData.shetn = element.nomer_sheta_1c
+            this.zakazData.shetsumm = element.summa_sheta_1c
             this.zakazData.totalsumm = element.total_summ
             this.zakazData.comment = element.comment
 

@@ -140,6 +140,7 @@ export default {
                 { text: 'Клиент', value: 'klient_name' },
                 { text: 'Телефон', value: 'phone' },
                 { text: 'Сумма (нал.)', value: 'total_summ' },
+                { text: '№ счета (1C)', value: 'nomer_sheta_1c' },
                 { text: 'Сумма (1C)', value: 'summa_sheta_1c' },
                 { text: 'Статус', value: 'status' },
                 { text: '', value: 'action' },
@@ -225,13 +226,11 @@ export default {
                 color = "#707070"
 
               ev.push({
-                name: this.MAIN_ORDER_LIST[i].zak_numbet,
+                name: this.MAIN_ORDER_LIST[i].zak_numbet+" "+this.MAIN_ORDER_LIST[i].klient_name,
                 color: color,
                 start:new Date(this.MAIN_ORDER_LIST[i].zak_final_data),
               });
             }
-
-            
 
             this.events = ev;
         },
