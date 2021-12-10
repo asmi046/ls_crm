@@ -42,6 +42,7 @@ class allLibs {
 
           store.dispatch('chengeAutorise',  true);
           store.dispatch('chengeUserName',  response.data.fio);
+          store.dispatch('chengeUserStatus',  response.data.status);
 
           if (savePassword) {
               d = new Date();
