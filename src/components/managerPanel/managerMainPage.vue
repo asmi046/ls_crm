@@ -4,10 +4,22 @@
           <v-form>
             <v-row class = "mb-3">
               
-                <v-col md = "8" cols="12">
+                <v-col >
                     <v-text-field @input="getTovarInBase" hide-details = true v-model = "serchStr" label="Введите запрос" prepend-inner-icon="mdi-magnify" ></v-text-field>                
                 </v-col>
                 
+                <v-col v-show="USER_STATUS === 'admin'" md = "2" cols="12">
+                  <v-select
+                    v-model = "managerEmail"
+                    :items = "MANAGER_EMAIL_LIST"
+                    label = "Менеджер"
+                    item-text="name"
+                    item-value="mail"
+                    hide-details = true,
+                    @change="getTovarInBase"
+                  ></v-select>           
+                </v-col>
+
                 <v-col md = "2" cols="12">
                   <v-select
                     v-model = "serchStatus"
@@ -19,7 +31,7 @@
                 </v-col>
                 
                 <v-col md = "2" cols="12">
-                    <v-btn @click="serchStatus = ''; serchStatus = ''; getTovarInBase()" width = "100%" class = "mt-3" color="success">
+                    <v-btn @click="serchStatus = ''; serchStatus = ''; managerEmail = ''; getTovarInBase()" width = "100%" class = "mt-3" color="success">
                           <v-icon class="mr-2">mdi-minus-circle-outline</v-icon> Сбросить
                     </v-btn>               
                 </v-col>
@@ -129,6 +141,7 @@ export default {
             showCalendar:false,
             serchStr:"",
             serchStatus:"",
+            managerEmail:"",
             headers: [
                 {
                     text: 'Номер заказа',
@@ -205,12 +218,12 @@ export default {
     },
 
     computed: {
-      ...mapGetters (["REST_API_PREFIX", "ORDER_STATUSES", "MAIN_ORDER_LIST"])
+      ...mapGetters (["REST_API_PREFIX", "ORDER_STATUSES", "MAIN_ORDER_LIST", "MANAGER_EMAIL_LIST", "USER_STATUS"])
     },
 
     methods: {
         editZakaz({ event }) {
-          this.$router.push({name:'editzak', params: {number: event.name}})
+          this.$router.push({name:'editzak', params: {number: event.id}})
         },
         getEvents () {
             
@@ -227,6 +240,7 @@ export default {
 
               ev.push({
                 name: this.MAIN_ORDER_LIST[i].zak_numbet+" "+this.MAIN_ORDER_LIST[i].klient_name,
+                id: this.MAIN_ORDER_LIST[i].zak_numbet,
                 color: color,
                 start:new Date(this.MAIN_ORDER_LIST[i].zak_final_data),
               });
@@ -243,12 +257,13 @@ export default {
         },
 
         getTovarInBase() {
-          this.$store.dispatch('updateOrderList',  {serch_str: this.serchStr, serch_status: this.serchStatus})
+          this.$store.dispatch('updateOrderList',  {serch_str: this.serchStr, serch_status: this.serchStatus, search_mail: this.managerEmail})
         }
     },
 
     created: function () {
        this.getTovarInBase();
+       this.$store.dispatch('updateManagerInfo')
     }
 }
 </script>

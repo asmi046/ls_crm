@@ -13,6 +13,7 @@ export default new Vuex.Store ({
         autorise: false,
         userName: "",
         userEmail: "",
+        userStatus: "",
         userPodrazdelenie: "",
         userDolgnost: "",
 
@@ -22,16 +23,50 @@ export default new Vuex.Store ({
         // Статусы заказа
         orderStatuses: ['Новый', 'Черновик', 'В работе', 'Архив'],
         // Список заказов
-        orderList:[]
+        orderList:[],
+        // Информация о менеджерах
+        managerInfo:[]
     },
 
     actions: {
+        updateManagerInfo(ctx) { 
+            axios.get(ctx.state.rest_api_prefix + 'get_manager_info',
+            {
+                params: {
+                    querystr: "",
+                }
+            })
+            .then( (resp) => {
+                ctx.commit('updateManagerInfo', resp.data);
+                console.log(resp.data); 
+            })
+
+            .catch((error) => {
+                let rezText = "";
+                if (error.response)
+                {
+                    rezText = error.response.data.message;
+                } else 
+                if (error.request) {
+                    rezText = error.message;
+                } else {
+                    rezText = error.message;
+                }
+                
+                console.log(error.config);
+                console.log(rezText);
+                
+            });
+        },
+
         updateOrderList(ctx, value) {
             axios.get(ctx.state.rest_api_prefix + 'get_zakaz',
             {
                 params: {
                     querystr: value.serch_str,
-                    status: value.serch_status
+                    status: value.serch_status,
+                    mngmail:localStorage.getItem("mail"),
+                    mngmailquery:value.search_mail
                 }
             })
             .then( (resp) => {
@@ -70,12 +105,20 @@ export default new Vuex.Store ({
             ctx.commit('updateUserName', value);
         },
 
+        chengeUserStatus(ctx, value){
+            ctx.commit('updateUserStatus', value);
+        },
+
         chengeLoginState(ctx, kpi){
             ctx.commit('updateLoginState', kpi);
         }
     },
 
     mutations: {
+        updateManagerInfo(state, newVal) {
+            state.managerInfo = newVal;
+        },
+
         updateOrderList(state, newVal) {
             state.orderList = newVal;
         },
@@ -92,6 +135,10 @@ export default new Vuex.Store ({
         updateUserName(state, newVal) {
             state.userName = newVal;
         },
+
+        updateUserStatus(state, newVal) {
+            state.userStatus = newVal;
+        },
         
         updateLoginState(state, newVal) {
             state.loginState = newVal;
@@ -100,6 +147,21 @@ export default new Vuex.Store ({
     },
     
     getters: {
+        USER_STATUS(state) {
+            return state.userStatus;
+        },
+        
+        MANAGER_EMAIL_LIST(state) {
+            let mailList = [];
+            
+            for (let i = 0; i<state.managerInfo.length; i++)
+            {
+                mailList.push({name:state.managerInfo[i].fio, mail:state.managerInfo[i].mail });
+            }
+
+            return mailList;
+        },
+
         MAIN_ORDER_LIST(state) {
             return state.orderList;
         },
