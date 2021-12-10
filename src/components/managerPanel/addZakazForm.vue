@@ -67,6 +67,7 @@
                         :items="zakazData.zaktovars"
                         item-key="name"
                         class="elevation-1"
+                        :items-per-page="-1"
                         :hideDefaultFooter = "true"
                     >
                         <template v-slot:[`item.img`]="{ item }">

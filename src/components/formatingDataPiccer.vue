@@ -20,7 +20,6 @@
           @blur="date = parseDate(dateFormatted)"
           v-on="on"
           readonly
-         
         ></v-text-field>
       </template>
       <v-date-picker
@@ -45,12 +44,18 @@
     computed: {
       computedDateFormatted () {
         return this.formatDate(this.date)
+        
       },
     },
 
     watch: {
       date () {
         this.dateFormatted = this.formatDate(this.date)
+      },
+
+      value(){
+        this.dateFormatted = this.formatDate(this.value)
+        console.log("V");
       }
 
     },
@@ -66,6 +71,7 @@
         if (!date) return null
         const [year, month, day] = date.split('-')
         return `${day}.${month}.${year}`
+
       },
       parseDate (date) {
         if (!date) return null

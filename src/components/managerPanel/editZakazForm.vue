@@ -66,6 +66,7 @@
                         :items="zakazData.zaktovars"
                         item-key="sku"
                         class="elevation-1"
+                        :items-per-page="-1"
                         :hideDefaultFooter = "true"
                     >
                         <template v-slot:[`item.img`]="{ item }">
@@ -286,11 +287,14 @@ export default {
     },
 
 
-    created: function() {
+    mounted: function() {
         console.log(this.MAIN_ORDER_LIST);
         
         if (this.MAIN_ORDER_LIST.length !== 0) {
             let element = this.MAIN_ORDER_LIST.find((el) =>  el.zak_numbet === this.$route.params.number )
+
+            console.log(element.zak_data)
+            console.log(element.zak_final_data)
 
             this.zakazData.zak_id = element.id
             this.zakazData.mng_name = element.mng_name
