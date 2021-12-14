@@ -101,6 +101,7 @@
                 :items-per-page="30"
                 item-key="name"
                 class="elevation-1"
+                :item-class="itemRowBackground"
                 :footer-props="{
                   showFirstLastPage: true,
                   firstIcon: 'mdi-arrow-collapse-left',
@@ -112,6 +113,14 @@
                 }"
               >
               
+                <template v-slot:[`item.zak_data`]="{ item }">
+                  {{formatDate(item.zak_data)}}
+                </template>
+
+                <template v-slot:[`item.zak_final_data`]="{ item }">
+                  {{(item.status !== 'Черновик')?formatDate(item.zak_final_data):''}}
+                </template>
+
                 <template v-slot:[`item.action`]="{ item }">
                   <v-icon title = "Редактировать заказ" class = "mr-2" @click = "$router.push({name:'editzak', params: {number: item.zak_numbet}})" >mdi-clipboard-edit-outline</v-icon>
                   <v-icon title = "Сформировать коммерческое предложение" class = "mr-2" @click = "$router.push({name:'kp', params: {number: item.zak_numbet}})" >mdi-cloud-print-outline</v-icon>
@@ -222,6 +231,22 @@ export default {
     },
 
     methods: {
+          itemRowBackground: function (item) {
+            if (item.status == "Новый")
+                return "bg_new";
+            if (item.status == "Черновик")
+                return "bg_draw";
+            if (item.status == "В работе")
+                return "bg_invork";
+            if (item.status == "Архив")
+                return "bg_arhiv";
+            
+        },
+        formatDate (date) {
+          if (!date) return null
+          const [year, month, day] = date.split('-')
+          return `${day}.${month}.${year}`
+        },
         editZakaz({ event }) {
           this.$router.push({name:'editzak', params: {number: event.id}})
         },
@@ -264,7 +289,9 @@ export default {
     created: function () {
        this.getTovarInBase();
        this.$store.dispatch('updateManagerInfo')
-    }
+    },
+
+
 }
 </script>
 
@@ -275,6 +302,22 @@ export default {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+  }
+
+  .bg_new {
+    background-color: #BDECB6;
+  }
+
+  .bg_draw{
+    background-color: #9ACEEB;
+  }
+
+  .bg_invork {
+    background-color: #FFF44F;
+  }
+
+  .bg_arhiv {
+    background-color: #DBD7D2;
   }
 
 </style>
