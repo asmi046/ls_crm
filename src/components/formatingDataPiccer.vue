@@ -54,8 +54,12 @@
       },
 
       value(){
-        this.dateFormatted = this.formatDate(this.value)
+        if (this.value.indexOf("-") > 0)
+          this.dateFormatted = this.formatDate(this.value)
+        else 
+          this.dateFormatted = this.value
         console.log("V");
+        console.log(this.dateFormatted);
       }
 
     },
@@ -71,7 +75,6 @@
         if (!date) return null
         const [year, month, day] = date.split('-')
         return `${day}.${month}.${year}`
-
       },
       parseDate (date) {
         if (!date) return null
