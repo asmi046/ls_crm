@@ -25,10 +25,67 @@ export default new Vuex.Store ({
         // Список заказов
         orderList:[],
         // Информация о менеджерах
-        managerInfo:[]
+        managerInfo:[],
+
+        //Меню для различных пользователей
+        mainMenuAdmin: [
+            {text: 'Главная', icon: 'mdi-home', to: "/"},
+            {text: 'Создать заказ', icon: 'mdi-file-document-outline', to: {name:'addzak'}},
+            {text: 'База товаров', icon: 'mdi-file-alert-outline', to: {name:'addtovtobase'}},
+            {text: 'Управление складами', icon: 'mdi-map-marker-outline', to: {name:'addscladtobase'}},
+            {text: 'Отчет о продажах', icon: 'mdi-cash-refund', to: {name:'salereport'}},
+            {text: 'Маршрутные листы', icon: 'mdi-car', to: {name:'roatlists'}}
+        ],
+        mainMenuManager: [
+            {text: 'Главная', icon: 'mdi-home', to: "/"},
+            {text: 'Создать заказ', icon: 'mdi-file-document-outline', to: {name:'addzak'}},
+            {text: 'База товаров', icon: 'mdi-file-alert-outline', to: {name:'addtovtobase'}},
+            {text: 'Управление складами', icon: 'mdi-map-marker-outline', to: {name:'addscladtobase'}},
+        ],
+        mainMenuSaler: [
+            {text: 'Главная', icon: 'mdi-home', to: "/"},
+            {text: 'Маршрутные листы', icon: 'mdi-car', to: {name:'roatlists'}}      
+        ],
+        mainMenuEmpty: [
+            {text: 'Главная', icon: 'mdi-home', to: "/"}
+            
+        ],
+
+        // склады
+
+        allScladInfo: []
     },
 
     actions: {
+        getAllScladInfo(ctx) {
+            axios.get(ctx.state.rest_api_prefix + 'get_all_sclads',
+            {
+                params: {
+                    querystr: "",
+                }
+            })
+            .then( (resp) => {
+                ctx.commit('getAllScladInfo', resp.data.slice());
+                console.log(resp.data); 
+            })
+
+            .catch((error) => {
+                let rezText = "";
+                if (error.response)
+                {
+                    rezText = error.response.data.message;
+                } else 
+                if (error.request) {
+                    rezText = error.message;
+                } else {
+                    rezText = error.message;
+                }
+                
+                console.log(error.config);
+                console.log(rezText);
+                
+            });
+        },
         updateManagerInfo(ctx) { 
             axios.get(ctx.state.rest_api_prefix + 'get_manager_info',
             {
@@ -115,6 +172,9 @@ export default new Vuex.Store ({
     },
 
     mutations: {
+        getAllScladInfo(state, newVal) {
+            state.allScladInfo = newVal;
+        },
         updateManagerInfo(state, newVal) {
             state.managerInfo = newVal;
         },
@@ -147,6 +207,24 @@ export default new Vuex.Store ({
     },
     
     getters: {
+        ALL_SCLAD_INFO(state) { 
+            return state.allScladInfo;
+        },
+        USER_MENU(state) {
+            if(state.userStatus == "admin") {
+              return state.mainMenuAdmin 
+            } 
+        
+            if (state.userStatus == "manager") {
+                return state.mainMenuManager 
+            }
+        
+            if (state.userStatus == "saler") {
+                return state.mainMenuSaler 
+            }
+
+            return state.mainMenuEmpty 
+        },
         USER_STATUS(state) {
             return state.userStatus;
         },

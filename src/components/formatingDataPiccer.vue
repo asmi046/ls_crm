@@ -58,8 +58,8 @@
           this.dateFormatted = this.formatDate(this.value)
         else 
           this.dateFormatted = this.value
-        console.log("V");
-        console.log(this.dateFormatted);
+
+        this.$emit('change', this.formatDate(this.value))
       }
 
     },
@@ -82,6 +82,17 @@
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
       },
     },
+
+    mounted: function() {
+        console.log(this.value)
+        if (this.value.indexOf("-") > 0)
+          this.dateFormatted = this.formatDate(this.value)
+        else 
+          this.dateFormatted = this.value
+          console.log(this.dateFormatted)
+
+          this.$emit('change', this.formatDate(this.value))
+    }
   }
 </script>
 

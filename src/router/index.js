@@ -7,7 +7,10 @@ import kp from '../components/kp'
 import editZakazForm from '../components/managerPanel/editZakazForm'
 import addZakazForm from '../components/managerPanel/addZakazForm'
 import tovarToBase from '../components/managerPanel/tovarToBase'
-
+import scladToBase from '../components/scladToBase'
+import finalReport from '../components/finalReport'
+import roatLists from '../components/zakupPanel/roatLists'
+import editRoadList from '../components/zakupPanel/editRoadList'
 
 import store from '../store';
 import allLibs from '../lib/libs'
@@ -39,10 +42,38 @@ let router = new VueRouter ( {
             },
             
             {
+                path: '/edit_roadlist/:listid?',
+                name: 'editroadlist',
+                meta: {title: "Редактировать маршрутный лист"},
+                component: editRoadList
+            },
+            
+            {
                 path: '/add_tov_to_base',
                 name: 'addtovtobase',
                 meta: {title: "Добавление товаров в базу"},
                 component: tovarToBase
+            },
+            
+            {
+                path: '/add_sclad_to_base',
+                name: 'addscladtobase',
+                meta: {title: "Управление складами"},
+                component: scladToBase
+            },
+
+            {
+                path: '/sale_report',
+                name: 'salereport',
+                meta: {title: "Отчет о продажах"},
+                component: finalReport
+            },
+
+            {
+                path: '/roat_lists',
+                name: 'roatlists',
+                meta: {title: "Маршрутные листы"},
+                component: roatLists
             },
 
             {

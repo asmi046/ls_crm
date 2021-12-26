@@ -29,7 +29,7 @@
             v-model="selectedItem"
             active-class="deep-purple--text text--accent-4"
           >
-            <v-list-item v-for="(item, i) in itemsMeny" :key="i" :to = "item.to">
+            <v-list-item v-for="(item, i) in USER_MENU" :key="i" :to = "item.to">
               <v-list-item-icon>
                 <v-icon>{{item.icon}}</v-icon>
               </v-list-item-icon>
@@ -53,23 +53,23 @@ export default {
   name: 'App',
   
   computed: {
-    ...mapGetters (["REST_API_PREFIX", "SHOW_PANEL"])
+    ...mapGetters (["REST_API_PREFIX", "SHOW_PANEL", "USER_STATUS", "USER_MENU"])
   },
 
   data: () => ({
     showMenu:false,
     selectedItem:0,
-    itemsMeny: [
-        {text: 'Главная', icon: 'mdi-home', to: "/"},
-        {text: 'Создать заказ', icon: 'mdi-file-document-outline', to: {name:'addzak'}},
-        {text: 'База товаров', icon: 'mdi-file-alert-outline', to: {name:'addtovtobase'}}
-    ],
+
   }),
 
   methods: {
     appExit() {
       allLibs.reloginUser();
     }
+  },
+  mounted: function() {
+
+
   }
 };
 </script>
