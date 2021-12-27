@@ -78,7 +78,7 @@
           
           <v-col class ="pa-4" md = "6" cols="12">
               <div class="ml_control">
-                    <v-btn class="mt-4 mb-4" color="success">
+                    <v-btn class="mt-4 mb-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/roadlist.php?rlid='+this.$route.params.listid" color="success">
                         <v-icon class="mr-2">mdi-microsoft-excel</v-icon> Скачать маршрутный лист
                     </v-btn>
               </div>
@@ -104,7 +104,7 @@
                                         <td>{{item_info.document}}</td>
                                         <td>{{item_info.pay}}</td>
                                         <td>{{item_info.commen}}</td>
-                                        <td><v-icon class = "mr-2" title = "Удалить поле" >mdi-delete-outline</v-icon></td>
+                                        <td><v-icon class = "mr-2" title = "Удалить поле" @click="deleteSclad(item_info)" >mdi-delete-outline</v-icon></td>
                                     </tr>
                                 </tbody>
                             </template>
@@ -114,7 +114,7 @@
                   <div v-for="(item,  key, i) in mlDeliveryArray" :key="i" class="ml_v_blk">
                       <div class="scladname deliveryAdr">
                           <span>{{item.adres}}</span>
-                          <v-icon class = "mr-2" title = "Удалить поле" >mdi-delete-outline</v-icon>
+                          <v-icon class = "mr-2" title = "Удалить поле" @click="deleteDelivery(item)" >mdi-delete-outline</v-icon>
                       </div>
                       <div class="delivery_info">
                           <strong>Клиент:</strong>{{item.klient_name}}<br>
@@ -165,6 +165,70 @@ export default {
     },
 
     methods:{
+        deleteSclad(item) 
+        {
+            axios.delete(this.REST_API_PREFIX + 'delete_sclad_in_road_list',
+            {
+                params: {
+                    id: item.id,
+                }
+            })
+            .then( (resp) => {
+                console.log(resp);
+                this.getZakazToDate()
+                this.getRoadListData()
+            })
+
+            .catch((error) => {
+                let rezText = "";
+                if (error.response)
+                {
+                    rezText = error.response.data.message;
+                } else 
+                if (error.request) {
+                    rezText = error.message;
+                } else {
+                    rezText = error.message;
+                }
+                
+                this.message = rezText
+                this.showAlert = "error"
+                this.showAlert = true
+
+            });
+        },
+        deleteDelivery(item) 
+        {
+            axios.delete(this.REST_API_PREFIX + 'delete_delivery_in_road_list',
+            {
+                params: {
+                    id: item.id,
+                }
+            })
+            .then( (resp) => {
+                console.log(resp);
+                this.getZakazToDate()
+                this.getRoadListData()
+            })
+
+            .catch((error) => {
+                let rezText = "";
+                if (error.response)
+                {
+                    rezText = error.response.data.message;
+                } else 
+                if (error.request) {
+                    rezText = error.message;
+                } else {
+                    rezText = error.message;
+                }
+                
+                this.message = rezText
+                this.showAlert = "error"
+                this.showAlert = true
+
+            }); 
+        },
         addDeliveryToMl(item) {
              axios.post(this.REST_API_PREFIX + 'add_delivery_to_road_list',
                 {
