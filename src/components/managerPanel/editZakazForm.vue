@@ -120,6 +120,15 @@
                             ></v-select>
                          </template>
 
+
+                        <template v-slot:[`item.cerecter`]="{ item }">
+                             <v-text-field
+                                v-model="item.cerecter"
+                                @change="recalcZakTable"
+                                label="Характеристики"
+                            ></v-text-field>
+                        </template>
+
                          <template v-slot:[`item.comment`]="{ item }">
                              <v-text-field
                                 v-model="item.comment"
@@ -268,6 +277,7 @@ export default {
             headers: [
                 {text: "Изображение", value: "img"},
                 {text: "Наименование", value: "name"},
+                {text: "Характеристики", value: "cerecter"},
                 {text: "Артикул", value: "sku"},
                 {text: "Количество", value: "count"},
                 {text: "Цена", value: "price"},
@@ -350,6 +360,8 @@ export default {
                 elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
                 this.zakazData.totalsumm += parseFloat(elem.summ);
             });
+
+            console.log(this.zakazData.zaktovars);
         },
         deleteTovElement (index) {
             console.log(index);
@@ -368,6 +380,7 @@ export default {
             this.zakazData.zaktovars.push({
                 img: element.img,
                 name: element.name,
+                cerecter: element.cerecter,
                 sku: element.sku,
                 count: element.count,
                 price: element.price,

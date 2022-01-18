@@ -127,6 +127,14 @@
                             ></v-text-field>
                          </template>
 
+                        <template v-slot:[`item.cerecter`]="{ item }">
+                             <v-text-field
+                                v-model="item.cerecter"
+                                @change="recalcZakTable"
+                                label="Характеристики"
+                            ></v-text-field>
+                        </template>
+
                         <template v-slot:[`item.action`]="{ index }">
                             <v-icon @click="deleteTovElement(index)" >mdi-delete-outline</v-icon>
                         </template>
@@ -246,6 +254,7 @@ export default {
             headers: [
                 {text: "Изображение", value: "img"},
                 {text: "Наименование", value: "name"},
+                {text: "Характеристики", value: "cerecter"},
                 {text: "Артикул", value: "sku"},
                 {text: "Количество", value: "count"},
                 {text: "Цена", value: "price"},
@@ -273,7 +282,8 @@ export default {
     methods:{
         generateZn() {
             this.zakazData.zaknumber = allLibs.getZn()
-            this.zakazData.data = new Date().toJSON().slice(0, 19).replace('T', ' ')
+            this.zakazData.data = new Date().toJSON().slice(0, 10).replace('T', ' ')
+            console.log(new Date().toJSON().slice(0, 10));
         },
 
         recalcZakTable() {
@@ -301,6 +311,7 @@ export default {
             this.zakazData.zaktovars.push({
                 img: element.img,
                 name: element.name,
+                cerecter: element.cerecter,
                 sku: element.sku,
                 count: element.count,
                 price: element.price,
@@ -338,6 +349,8 @@ export default {
                     this.$refs.addZakForm.reset()
                     this.zakazData.zaktovars = []
                     this.generateZn()
+
+                    this.$router.push({ name: 'service' })
 
                     console.log(resp);
                 })
