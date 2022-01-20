@@ -139,6 +139,7 @@ export default {
                 img: item.lnk,
                 name: item.name,
                 sku: item.sku,
+                cerecter: "",
                 count: 1,
                 price: 0,
                 sale: 0,

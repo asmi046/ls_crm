@@ -68,6 +68,7 @@
                         item-key="name"
                         class="elevation-1"
                         :items-per-page="-1"
+
                         :hideDefaultFooter = "true"
                     >
                         <template v-slot:[`item.img`]="{ item }">
@@ -143,8 +144,9 @@
             </v-row>
             
             <v-row>
-                <v-col class="d-flex">
+                <v-col class="d-flex flex-column">
                     <span class = "ml-auto"><strong>Итого: {{zakazData.totalsumm}} р.</strong></span>
+                    <span class = "ml-auto"><strong>Итого без скидки: {{summWitchSale}} р.</strong></span>
                 </v-col>
             </v-row>
 
@@ -236,6 +238,8 @@ export default {
                 
                 ]
             },
+
+            summWitchSale:0,
             
             requiredRules:[
                 value => !!value || 'Должно быть заполнено.'
@@ -288,9 +292,11 @@ export default {
 
         recalcZakTable() {
             this.zakazData.totalsumm = 0;
+            this.summWitchSale = 0;
             this.zakazData.zaktovars.forEach((elem) => {
                 elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
                 this.zakazData.totalsumm += parseFloat(elem.summ);
+                this.summWitchSale += parseFloat(parseFloat(elem.count) * parseFloat(elem.price));
             });
         },
 
@@ -322,6 +328,7 @@ export default {
                 comment:element.comment
             })
 
+console.
         this.recalcZakTable();
             
         },
@@ -349,6 +356,8 @@ export default {
                     this.$refs.addZakForm.reset()
                     this.zakazData.zaktovars = []
                     this.generateZn()
+
+                    this.$store.dispatch('updateOrderList',  {serch_str: "", serch_status: "", search_mail: ""})
 
                     this.$router.push({ name: 'service' })
 
