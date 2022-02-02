@@ -119,8 +119,8 @@ export default {
     data() {
         return {
             createData:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-            startData:(new Date(Date.now() - 86400000 - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
-            endData:(new Date(Date.now() + 86400000 - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            startData:(new Date(Date.now() - 864000000 - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
+            endData:(new Date(Date.now() + 864000000 - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             status:"%",
             statusItems: [
               {name:"Все", value:"%"},

@@ -2,7 +2,7 @@
     <v-container class = "pd-2" >
       <v-row class="borderM">
         <v-col>
-            <h1>Маршрутные листы № {{this.$route.params.listid}}</h1>
+            <h1>Маршрутные листы № {{this.$route.params.listid}} на {{(mlInfo.length == 0)?"":formatDate(mlInfo[0].data)}}</h1>
         </v-col>
       </v-row>
       <v-row>
@@ -21,7 +21,7 @@
           <v-col class ="pa-4 borderRight" md = "6" cols="12">
               <h2>Добавить склад</h2>
                 <v-form style = "margin-bottom: 30px;" ref="addZakForm">
-                    <v-select
+                    <v-autocomplete
                         v-model = "skladinfo.skladid"
                         :items = "ALL_SCLAD_INFO"
                         label = "Склад"
@@ -31,7 +31,7 @@
                         @change="getScladName"
                         :rules="requiredRules"
 
-                    ></v-select> 
+                    ></v-autocomplete> 
 
                     <v-text-field :rules="requiredRules"  label = "Документ" v-model="skladinfo.document"></v-text-field>
                 
@@ -43,7 +43,8 @@
                         :rules="requiredRules"
                     ></v-select>
 
-                    <v-text-field :rules="requiredRules"  label = "Комментарий" v-model="skladinfo.comment"></v-text-field>
+                    <v-text-field label = "Цена" v-model="skladinfo.price"></v-text-field>
+                    <v-text-field label = "Комментарий" v-model="skladinfo.comment"></v-text-field>
                     
                     <v-btn class="mt-8" @click="addToSclad()" color="success">
                         <v-icon class="mr-2">mdi-plus</v-icon> Добавить в лист
@@ -59,6 +60,7 @@
                                 <thead>
                                     <tr>
                                         <th>Заказ</th>
+                                        <th>Менеджер</th>
                                         <th>Клиент</th>
                                         <th>Адрес</th>
                                         <th></th>
@@ -66,7 +68,8 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for = "(item_info,  key, i) in allZakInData" :key="i" >
-                                        <td>{{item_info.zak_numbet}}</td>
+                                        <td><span class = "lincToZak" @click.prevent = "$router.push({name:'editzak', params: {number: item_info.zak_numbet}})">{{item_info.zak_numbet}}</span></td>
+                                        <td>{{item_info.mng_name}}</td>
                                         <td>{{item_info.klient_name}}</td>
                                         <td>{{item_info.adres}}</td>
                                         <td><v-icon class = "mr-2" @click="addDeliveryToMl(item_info)" title = "Добавить в доставку" >mdi-arrow-right</v-icon></td>
@@ -95,6 +98,7 @@
                                     <tr>
                                         <th>Документ</th>
                                         <th>Оплата</th>
+                                        <th>Цена</th>
                                         <th>Комментарий</th>
                                         <th></th>
                                     </tr>
@@ -103,6 +107,7 @@
                                     <tr v-for = "(item_info,  key, i) in item" :key="i" >
                                         <td>{{item_info.document}}</td>
                                         <td>{{item_info.pay}}</td>
+                                        <td>{{item_info.price}}</td>
                                         <td>{{item_info.commen}}</td>
                                         <td><v-icon class = "mr-2" title = "Удалить поле" @click="deleteSclad(item_info)" >mdi-delete-outline</v-icon></td>
                                     </tr>
@@ -118,6 +123,7 @@
                       </div>
                       <div class="delivery_info">
                           <strong>Клиент:</strong>{{item.klient_name}}<br>
+                          <strong>Телефон:</strong>{{item.klient_phone}}<br>
                           <strong>Комментарий:</strong>{{item.comment}}<br>
                       </div>
                   </div>
@@ -137,6 +143,7 @@ export default {
         return {
             skladinfo: {
                 skladid:0,
+                price:"",
                 skladname:"",
                 document:"",
                 pay:"",
@@ -153,6 +160,7 @@ export default {
 
             mlSkladArray:[],
             mlDeliveryArray:[],
+            mlInfo:[],
 
             mainData:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
 
@@ -165,6 +173,12 @@ export default {
     },
 
     methods:{
+        formatDate (date) {
+          if (!date) return null
+          const [year, month, day] = date.split('-')
+          return `${day}.${month}.${year}`
+        },
+
         deleteSclad(item) 
         {
             axios.delete(this.REST_API_PREFIX + 'delete_sclad_in_road_list',
@@ -305,6 +319,7 @@ export default {
                         .then( (resp) => {
                             this.mlSkladArray = resp.data.sklads
                             this.mlDeliveryArray = resp.data.delivery
+                            this.mlInfo = resp.data.roadlist
                             console.log(resp);
                         })
 
@@ -345,7 +360,7 @@ export default {
                     this.message = "Данные склада добавленны"
                     this.alertType = "success";
                     this.showAlert = true;
-                    
+                    this.getRoadListData()
                     console.log(resp);
                 })
 
@@ -382,6 +397,11 @@ export default {
 </script>
 
     <style>
+
+    .lincToZak {
+        color:#4caf50;
+        cursor: pointer;
+    }
     .scladname {
         padding: 10px 20px;
         background-color: lightskyblue;
