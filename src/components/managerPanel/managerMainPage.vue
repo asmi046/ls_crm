@@ -101,6 +101,9 @@
                 :items-per-page="30"
                 item-key="name"
                 class="elevation-1"
+                :sort-by.sync="sb"
+                :sort-desc.sync="sd"
+
                 :item-class="itemRowBackground"
                 :footer-props="{
                   showFirstLastPage: true,
@@ -144,6 +147,8 @@ export default {
     components: { deleteDialog },
     data(){
         return {
+          sb:'zak_data',
+          sd:true,
             focus: '',
             type:"month",
             events:[],

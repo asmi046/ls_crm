@@ -68,6 +68,7 @@
                         item-key="name"
                         class="elevation-1"
                         :items-per-page="-1"
+
                         :hideDefaultFooter = "true"
                     >
                         <template v-slot:[`item.img`]="{ item }">
@@ -127,6 +128,14 @@
                             ></v-text-field>
                          </template>
 
+                        <template v-slot:[`item.cerecter`]="{ item }">
+                             <v-text-field
+                                v-model="item.cerecter"
+                                @change="recalcZakTable"
+                                label="Характеристики"
+                            ></v-text-field>
+                        </template>
+
                         <template v-slot:[`item.action`]="{ index }">
                             <v-icon @click="deleteTovElement(index)" >mdi-delete-outline</v-icon>
                         </template>
@@ -135,8 +144,9 @@
             </v-row>
             
             <v-row>
-                <v-col class="d-flex">
+                <v-col class="d-flex flex-column">
                     <span class = "ml-auto"><strong>Итого: {{zakazData.totalsumm}} р.</strong></span>
+                    <span class = "ml-auto"><strong>Итого без скидки: {{summWitchSale}} р.</strong></span>
                 </v-col>
             </v-row>
 
@@ -228,6 +238,8 @@ export default {
                 
                 ]
             },
+
+            summWitchSale:0,
             
             requiredRules:[
                 value => !!value || 'Должно быть заполнено.'
@@ -246,6 +258,7 @@ export default {
             headers: [
                 {text: "Изображение", value: "img"},
                 {text: "Наименование", value: "name"},
+                {text: "Характеристики", value: "cerecter"},
                 {text: "Артикул", value: "sku"},
                 {text: "Количество", value: "count"},
                 {text: "Цена", value: "price"},
@@ -273,14 +286,17 @@ export default {
     methods:{
         generateZn() {
             this.zakazData.zaknumber = allLibs.getZn()
-            this.zakazData.data = new Date().toJSON().slice(0, 19).replace('T', ' ')
+            this.zakazData.data = new Date().toJSON().slice(0, 10).replace('T', ' ')
+            console.log(new Date().toJSON().slice(0, 10));
         },
 
         recalcZakTable() {
             this.zakazData.totalsumm = 0;
+            this.summWitchSale = 0;
             this.zakazData.zaktovars.forEach((elem) => {
                 elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
                 this.zakazData.totalsumm += parseFloat(elem.summ);
+                this.summWitchSale += parseFloat(parseFloat(elem.count) * parseFloat(elem.price));
             });
         },
 
@@ -301,6 +317,7 @@ export default {
             this.zakazData.zaktovars.push({
                 img: element.img,
                 name: element.name,
+                cerecter: element.cerecter,
                 sku: element.sku,
                 count: element.count,
                 price: element.price,
@@ -311,6 +328,7 @@ export default {
                 comment:element.comment
             })
 
+console.
         this.recalcZakTable();
             
         },
@@ -338,6 +356,10 @@ export default {
                     this.$refs.addZakForm.reset()
                     this.zakazData.zaktovars = []
                     this.generateZn()
+
+                    this.$store.dispatch('updateOrderList',  {serch_str: "", serch_status: "", search_mail: ""})
+
+                    this.$router.push({ name: 'service' })
 
                     console.log(resp);
                 })

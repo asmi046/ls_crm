@@ -120,6 +120,15 @@
                             ></v-select>
                          </template>
 
+
+                        <template v-slot:[`item.cerecter`]="{ item }">
+                             <v-text-field
+                                v-model="item.cerecter"
+                                @change="recalcZakTable"
+                                label="Характеристики"
+                            ></v-text-field>
+                        </template>
+
                          <template v-slot:[`item.comment`]="{ item }">
                              <v-text-field
                                 v-model="item.comment"
@@ -135,8 +144,9 @@
             </v-row>
             
             <v-row>
-                <v-col class="d-flex">
+                <v-col class="d-flex flex-column">
                     <span class = "ml-auto"><strong>Итого: {{zakazData.totalsumm}} р.</strong></span>
+                    <span class = "ml-auto"><strong>Итого без скидки: {{summWitchSale}} р.</strong></span>
                 </v-col>
             </v-row>
 
@@ -250,6 +260,8 @@ export default {
                 
                 ]
             },
+
+            summWitchSale:0,
             
             requiredRules:[
                 value => !!value || 'Должно быть заполнено.'
@@ -268,6 +280,7 @@ export default {
             headers: [
                 {text: "Изображение", value: "img"},
                 {text: "Наименование", value: "name"},
+                {text: "Характеристики", value: "cerecter"},
                 {text: "Артикул", value: "sku"},
                 {text: "Количество", value: "count"},
                 {text: "Цена", value: "price"},
@@ -321,6 +334,7 @@ export default {
                 .then( (resp) => {
                 console.log(resp);
                  this.zakazData.zaktovars = resp.data
+                 this.recalcZakTable()
                 })
 
                 .catch((error) => {
@@ -346,10 +360,14 @@ export default {
     methods:{
         recalcZakTable() {
             this.zakazData.totalsumm = 0;
+            this.summWitchSale = 0;
             this.zakazData.zaktovars.forEach((elem) => {
                 elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
                 this.zakazData.totalsumm += parseFloat(elem.summ);
+                this.summWitchSale += parseFloat(parseFloat(elem.count) * parseFloat(elem.price));
             });
+
+            console.log(this.zakazData.zaktovars);
         },
         deleteTovElement (index) {
             console.log(index);
@@ -368,6 +386,7 @@ export default {
             this.zakazData.zaktovars.push({
                 img: element.img,
                 name: element.name,
+                cerecter: element.cerecter,
                 sku: element.sku,
                 count: element.count,
                 price: element.price,

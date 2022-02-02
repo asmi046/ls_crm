@@ -217,6 +217,7 @@ export default {
             {
                 params: {
                     id: item.id,
+                    number:item.zak_numbet
                 }
             })
             .then( (resp) => {
@@ -289,6 +290,7 @@ export default {
                         })
                         .then( (resp) => {
                             this.allZakInData = resp.data
+
                             console.log(resp);
                         })
 
@@ -314,6 +316,7 @@ export default {
                         {
                             params: {
                                 mlid: this.$route.params.listid,
+                                
                             }
                         })
                         .then( (resp) => {
@@ -360,6 +363,7 @@ export default {
                     this.message = "Данные склада добавленны"
                     this.alertType = "success";
                     this.showAlert = true;
+                    this.getZakazToDate()
                     this.getRoadListData()
                     console.log(resp);
                 })
