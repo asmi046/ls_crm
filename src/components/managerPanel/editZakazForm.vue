@@ -6,11 +6,26 @@
             </v-col>
         </v-row>
         <v-row class = "borderM marginM">
-            <v-col>
+            <v-col md = "4" cols = "12">
                 <div class="zakazStatus">
                     <span :class = "(zakazData.status == 'Новый')?'newZak':'oldZak'">{{zakazData.status}}</span>
                 </div>
             </v-col>
+
+            <v-col v-if="zakazData.in_road_list != 0" md = "4" cols = "12">
+                <span>
+                    Маршрутный лист № {{zakazData.in_road_list}} 
+                       
+                </span> 
+                <v-icon>mdi-delete-outline</v-icon> 
+            </v-col>
+
+            <v-col md = "4" cols = "12">
+                <v-btn small  color="info">
+                    <v-icon class="mr-2">mdi-archive-cog-outline</v-icon> Архивировать заказ
+                </v-btn>
+            </v-col>
+
         </v-row>
         <v-form  ref="addZakForm">
             <v-row>
@@ -397,6 +412,7 @@ export default {
                         this.zakazData.totalsumm = resp.data.total_summ
                         this.zakazData.comment = resp.data.comment
                         this.zakazData.status = resp.data.status
+                        this.zakazData.in_road_list = resp.data.in_road_list
 
                         this.getZakTovarInBase();
             })

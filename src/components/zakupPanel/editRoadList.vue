@@ -128,7 +128,7 @@
                   <h2>Доставки</h2>
                   <div v-for="(item,  key, i) in mlDeliveryArray" :key="i" class="ml_v_blk">
                       <div class="scladname deliveryAdr">
-                          <span>{{item.adres}}</span>
+                          <span>{{item.adres}} ({{item.zak_numbet}})</span>
                           <v-icon class = "mr-2" title = "Удалить поле" @click="deleteDelivery(item)" >mdi-delete-outline</v-icon>
                       </div>
                       <div class="delivery_info">
@@ -414,7 +414,7 @@ export default {
 
     <style>
     .rodlist {
-        margin-right: 20px;
+        margin: 5px 20px 5px 0;
     }
 
     .lincToZak {
