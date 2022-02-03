@@ -8,20 +8,23 @@
         <v-row class = "borderM marginM">
             <v-col md = "4" cols = "12">
                 <div class="zakazStatus">
-                    <span :class = "(zakazData.status == 'Новый')?'newZak':'oldZak'">{{zakazData.status}}</span>
+                    <span :class = "(zakazData.status == 'Новый')?'newZak':(zakazData.status == 'Архив')?'arhZak':'oldZak'">{{zakazData.status}}</span>
                 </div>
             </v-col>
 
             <v-col v-if="zakazData.in_road_list != 0" md = "4" cols = "12">
-                <span>
+                <span class = "label_input_ml">
                     Маршрутный лист № {{zakazData.in_road_list}} 
                        
                 </span> 
-                <v-icon>mdi-delete-outline</v-icon> 
+                
+                <v-btn small color="error" @click.prevent="clearMl();">
+                    <v-icon class="mr-2">mdi-delete-outline</v-icon> Снять
+                </v-btn> 
             </v-col>
 
             <v-col md = "4" cols = "12">
-                <v-btn small  color="info">
+                <v-btn small  color="info" @click.prevent="updateZakToBase('Архив'); $router.go()">
                     <v-icon class="mr-2">mdi-archive-cog-outline</v-icon> Архивировать заказ
                 </v-btn>
             </v-col>
@@ -210,12 +213,12 @@
                 
 
                 <v-col md = "4" cols="12">
-                    <v-btn @click.prevent="updateZakToBase('Черновик')" color="success">
+                    <v-btn @click.prevent="updateZakToBase('Черновик'); $router.go()" color="success">
                         <v-icon class="mr-2">mdi-content-copy</v-icon> Сохранить как черновик
                     </v-btn>
                 </v-col>
                 <v-col md = "4" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
-                    <v-btn  @click.prevent="updateZakToBase('Новый')" color="success">
+                    <v-btn  @click.prevent="updateZakToBase('Новый'); $router.go()" color="success">
                         <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
                     </v-btn>
                 </v-col>
@@ -325,31 +328,6 @@ export default {
 
     mounted: function() {
         console.log(this.MAIN_ORDER_LIST);
-        
-        // if (this.MAIN_ORDER_LIST.length !== 0) {
-        //     let element = this.MAIN_ORDER_LIST.find((el) =>  el.zak_numbet === this.$route.params.number )
-
-        //     console.log(element.zak_data)
-        //     console.log(element.zak_final_data)
-
-        //     this.zakazData.zak_id = element.id
-        //     this.zakazData.mng_name = element.mng_name
-        //     this.zakazData.mng_mail = element.mng_mail
-        //     this.zakazData.zaknumber = element.zak_numbet
-        //     this.zakazData.data = element.zak_data
-        //     this.zakazData.datafinal = element.zak_final_data
-        //     this.zakazData.name = element.klient_name
-        //     this.zakazData.phone = element.phone
-        //     this.zakazData.phone2 = element.phone2
-        //     this.zakazData.adr = element.adres
-        //     this.zakazData.beznal = (element.beznal == 0)?false:true
-        //     this.zakazData.shetn = element.nomer_sheta_1c
-        //     this.zakazData.shetsumm = element.summa_sheta_1c
-        //     this.zakazData.totalsumm = element.total_summ
-        //     this.zakazData.comment = element.comment
-
-               
-        // }
 
         this.getZakInBase();
     },
@@ -357,6 +335,39 @@ export default {
 
 
     methods:{
+        clearMl() 
+        {
+            axios.delete(this.REST_API_PREFIX + 'delete_delivery_in_road_list_by_zak',
+            {
+                params: {
+                    mlid: this.zakazData.in_road_list,
+                    number:this.$route.params.number
+                }
+            })
+            .then( (resp) => {
+                console.log(resp);
+                this.$router.go()
+            })
+
+            .catch((error) => {
+                let rezText = "";
+                if (error.response)
+                {
+                    rezText = error.response.data.message;
+                } else 
+                if (error.request) {
+                    rezText = error.message;
+                } else {
+                    rezText = error.message;
+                }
+                
+                this.message = rezText
+                this.showAlert = "error"
+                this.showAlert = true
+
+            }); 
+        },
+
         getZakTovarInBase() {
             axios.get(this.REST_API_PREFIX + 'get_order_tovar',
                 {
@@ -527,6 +538,11 @@ export default {
 </script>
 
 <style>
+
+.label_input_ml {
+    margin: auto 10px auto 0;
+}
+
 .countFeild {
     max-width: 50px;
 }
@@ -545,6 +561,10 @@ export default {
 
 .oldZak {
     background-color: #9ACEEB;
+}
+
+.arhZak {
+    background-color: lightgray;
 }
 
 .newZak {
