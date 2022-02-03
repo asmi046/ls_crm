@@ -16,3 +16,11 @@ dd {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.borderM{
+  border-bottom: 1px solid lightgray;
+}
+
+.marginM{
+  margin-bottom: 10px!important;
+}

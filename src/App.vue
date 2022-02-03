@@ -75,6 +75,7 @@ export default {
 </script>
 
 <style>
+
   @media (min-width: 1264px){
     .container {
         max-width: 96%;

@@ -1,11 +1,18 @@
 <template>
     <v-container class = "pd-2">
-       <v-row>
+       <v-row class = "borderM">
             <v-col>
                 <h1>Редактировать заказ</h1>
             </v-col>
         </v-row>
-        <v-form v-if = "MAIN_ORDER_LIST.length !== 0" ref="addZakForm">
+        <v-row class = "borderM marginM">
+            <v-col>
+                <div class="zakazStatus">
+                    <span :class = "(zakazData.status == 'Новый')?'newZak':'oldZak'">{{zakazData.status}}</span>
+                </div>
+            </v-col>
+        </v-row>
+        <v-form  ref="addZakForm">
             <v-row>
                 <v-col md = "6" cols = "12">
                     <v-text-field v-model="zakazData.zaknumber" label="Номер заказа" prepend-inner-icon="mdi-tag" readonly ></v-text-field>
@@ -216,11 +223,11 @@
 
         </v-form>
 
-        <v-row v-else > 
+        <!-- <v-row v-else > 
             <v-col>
                 <p class="obrlnk">Данные не загружены <router-link :to = "{name:'service'}"> Вернуться на главную</router-link></p>
             </v-col>
-        </v-row>
+        </v-row> -->
 
         
 
@@ -256,6 +263,7 @@ export default {
                 shetsumm:0,
                 totalsumm:0,
                 comment:"",
+                status:"",
                 zaktovars:[ 
                 
                 ]
@@ -303,29 +311,39 @@ export default {
     mounted: function() {
         console.log(this.MAIN_ORDER_LIST);
         
-        if (this.MAIN_ORDER_LIST.length !== 0) {
-            let element = this.MAIN_ORDER_LIST.find((el) =>  el.zak_numbet === this.$route.params.number )
+        // if (this.MAIN_ORDER_LIST.length !== 0) {
+        //     let element = this.MAIN_ORDER_LIST.find((el) =>  el.zak_numbet === this.$route.params.number )
 
-            console.log(element.zak_data)
-            console.log(element.zak_final_data)
+        //     console.log(element.zak_data)
+        //     console.log(element.zak_final_data)
 
-            this.zakazData.zak_id = element.id
-            this.zakazData.mng_name = element.mng_name
-            this.zakazData.mng_mail = element.mng_mail
-            this.zakazData.zaknumber = element.zak_numbet
-            this.zakazData.data = element.zak_data
-            this.zakazData.datafinal = element.zak_final_data
-            this.zakazData.name = element.klient_name
-            this.zakazData.phone = element.phone
-            this.zakazData.phone2 = element.phone2
-            this.zakazData.adr = element.adres
-            this.zakazData.beznal = (element.beznal == 0)?false:true
-            this.zakazData.shetn = element.nomer_sheta_1c
-            this.zakazData.shetsumm = element.summa_sheta_1c
-            this.zakazData.totalsumm = element.total_summ
-            this.zakazData.comment = element.comment
+        //     this.zakazData.zak_id = element.id
+        //     this.zakazData.mng_name = element.mng_name
+        //     this.zakazData.mng_mail = element.mng_mail
+        //     this.zakazData.zaknumber = element.zak_numbet
+        //     this.zakazData.data = element.zak_data
+        //     this.zakazData.datafinal = element.zak_final_data
+        //     this.zakazData.name = element.klient_name
+        //     this.zakazData.phone = element.phone
+        //     this.zakazData.phone2 = element.phone2
+        //     this.zakazData.adr = element.adres
+        //     this.zakazData.beznal = (element.beznal == 0)?false:true
+        //     this.zakazData.shetn = element.nomer_sheta_1c
+        //     this.zakazData.shetsumm = element.summa_sheta_1c
+        //     this.zakazData.totalsumm = element.total_summ
+        //     this.zakazData.comment = element.comment
 
-                axios.get(this.REST_API_PREFIX + 'get_order_tovar',
+               
+        // }
+
+        this.getZakInBase();
+    },
+
+
+
+    methods:{
+        getZakTovarInBase() {
+            axios.get(this.REST_API_PREFIX + 'get_order_tovar',
                 {
                     params: {
                         orderid: this.$route.params.number,
@@ -352,12 +370,54 @@ export default {
                     console.log(error.config);
                     console.log(rezText);
             });
-        }
-    },
+        },
 
+        getZakInBase() {
+            axios.get(this.REST_API_PREFIX + 'get_zakaz_info',
+            {
+                params: {
+                    number: this.$route.params.number,
+                }
+            })
+            .then( (resp) => {
+                console.log(resp)
+                        this.zakazData.zak_id = resp.data.id
+                        this.zakazData.mng_name = resp.data.mng_name
+                        this.zakazData.mng_mail = resp.data.mng_mail
+                        this.zakazData.zaknumber = resp.data.zak_numbet
+                        this.zakazData.data = resp.data.zak_data
+                        this.zakazData.datafinal = resp.data.zak_final_data
+                        this.zakazData.name = resp.data.klient_name
+                        this.zakazData.phone = resp.data.phone
+                        this.zakazData.phone2 = resp.data.phone2
+                        this.zakazData.adr = resp.data.adres
+                        this.zakazData.beznal = (resp.data.beznal == 0)?false:true
+                        this.zakazData.shetn = resp.data.nomer_sheta_1c
+                        this.zakazData.shetsumm = resp.data.summa_sheta_1c
+                        this.zakazData.totalsumm = resp.data.total_summ
+                        this.zakazData.comment = resp.data.comment
+                        this.zakazData.status = resp.data.status
 
+                        this.getZakTovarInBase();
+            })
 
-    methods:{
+            .catch((error) => {
+                let rezText = "";
+                if (error.response)
+                {
+                    rezText = error.response.data.message;
+                } else 
+                if (error.request) {
+                    rezText = error.message;
+                } else {
+                    rezText = error.message;
+                }
+                
+                console.log(error.config);
+                console.log(rezText);
+            });
+        },
+
         recalcZakTable() {
             this.zakazData.totalsumm = 0;
             this.summWitchSale = 0;
@@ -460,5 +520,18 @@ export default {
 
 .table_select {
     max-width: 100px;
+}
+
+.zakazStatus span{
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.oldZak {
+    background-color: #9ACEEB;
+}
+
+.newZak {
+    background-color: #BDECB6;
 }
 </style>

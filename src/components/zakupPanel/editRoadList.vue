@@ -5,6 +5,16 @@
             <h1>Маршрутные листы № {{this.$route.params.listid}} на {{(mlInfo.length == 0)?"":formatDate(mlInfo[0].data)}}</h1>
         </v-col>
       </v-row>
+
+      <v-row  class="borderM">
+          <v-col>
+              <v-btn class = "rodlist" elevation="2" small @click.prevent="$router.push({name:'roatlists'})" > К списку</v-btn>
+              <v-btn class = "rodlist" v-for="(item, i) in mlNext" :key="i" elevation="2" small @click.prevent="$router.push({name:'editroadlist', params: {listid: item.id}}, () => {
+                    getRoadListData()
+                    getZakazToDate()
+                  } )">№ {{item.id}} на {{formatDate(item.data)}}</v-btn>
+          </v-col>
+      </v-row>
       <v-row>
           <v-col>
                 <v-alert
@@ -161,6 +171,7 @@ export default {
             mlSkladArray:[],
             mlDeliveryArray:[],
             mlInfo:[],
+            mlNext:[],
 
             mainData:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
 
@@ -323,6 +334,7 @@ export default {
                             this.mlSkladArray = resp.data.sklads
                             this.mlDeliveryArray = resp.data.delivery
                             this.mlInfo = resp.data.roadlist
+                            this.mlNext = resp.data.roadlist_next
                             console.log(resp);
                         })
 
@@ -390,7 +402,7 @@ export default {
         }
     },
 
-    created: function() {
+    mounted: function() {
         this.getRoadListData()
         this.getZakazToDate()
         if (this.ALL_SCLAD_INFO.length == 0) 
@@ -401,6 +413,9 @@ export default {
 </script>
 
     <style>
+    .rodlist {
+        margin-right: 20px;
+    }
 
     .lincToZak {
         color:#4caf50;
@@ -415,10 +430,6 @@ export default {
 
     .deliveryAdr {
         background-color: lightgreen;
-    }
-
-    .borderM{
-        border-bottom: 1px solid lightgray;
     }
 
     .borderRight {
