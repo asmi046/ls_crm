@@ -41,7 +41,7 @@
 
           <v-row>
             <v-col>
-              <v-btn tile :color="(!showCalendar)?'success':'error'"  @click.prevent="showCalendar = !showCalendar; if (events.length == 0) getEvents()">
+              <v-btn tile :color="(!showCalendar)?'success':'error'"  @click.prevent="showCalendar = !showCalendar;  getEvents()">
                 <v-icon left>mdi-calendar</v-icon>
                   <span v-text = "(!showCalendar)?'Показать календарь':'Скрыть календарь'">Показать календарь</span>
               </v-btn>              

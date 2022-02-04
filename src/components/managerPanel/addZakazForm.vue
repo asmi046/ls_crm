@@ -287,6 +287,7 @@ export default {
         generateZn() {
             this.zakazData.zaknumber = allLibs.getZn()
             this.zakazData.data = new Date().toJSON().slice(0, 10).replace('T', ' ')
+            this.zakazData.datafinal = new Date().toJSON().slice(0, 10).replace('T', ' ')
             console.log(new Date().toJSON().slice(0, 10));
         },
 

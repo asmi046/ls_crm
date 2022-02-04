@@ -24,7 +24,7 @@
             </v-col>
 
             <v-col md = "4" cols = "12">
-                <v-btn small  color="info" @click.prevent="updateZakToBase('Архив'); $router.go()">
+                <v-btn small  color="info" @click.prevent="updateZakToBase('Архив');">
                     <v-icon class="mr-2">mdi-archive-cog-outline</v-icon> Архивировать заказ
                 </v-btn>
             </v-col>
@@ -213,12 +213,12 @@
                 
 
                 <v-col md = "4" cols="12">
-                    <v-btn @click.prevent="updateZakToBase('Черновик'); $router.go()" color="success">
+                    <v-btn @click.prevent="updateZakToBase('Черновик');" color="success">
                         <v-icon class="mr-2">mdi-content-copy</v-icon> Сохранить как черновик
                     </v-btn>
                 </v-col>
                 <v-col md = "4" cols="12" class = "ml-auto justify-xl-end justify-md-end d-flex .d-md">
-                    <v-btn  @click.prevent="updateZakToBase('Новый'); $router.go()" color="success">
+                    <v-btn  @click.prevent="updateZakToBase('Новый'); " color="success">
                         <v-icon class="mr-2">mdi-content-save</v-icon> Сохранить заказ
                     </v-btn>
                 </v-col>
@@ -346,7 +346,7 @@ export default {
             })
             .then( (resp) => {
                 console.log(resp);
-                this.$router.go()
+                this.zakazData.in_road_list = 0
             })
 
             .catch((error) => {
@@ -505,6 +505,8 @@ export default {
                     this.alertType = "success";
                     this.showAlert = true;
                     console.log(resp);
+                    this.zakazData.status = status
+                        
                 })
 
                 .catch((error) => {
