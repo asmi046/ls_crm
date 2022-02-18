@@ -48,6 +48,42 @@
                     </v-data-table>
                 </v-col>
             </v-row>
+            
+            <v-row>
+                <v-col>
+                    <h2>Детализация по менеджерам</h2>
+                </v-col>
+            </v-row>
+            
+            <v-row>
+                <v-col>
+                    <v-simple-table>
+                        <template v-slot:default>
+                        <thead>
+                            <tr>
+                                <th class="text-left">№</th>
+                                <th class="text-left">Номер заказа</th>
+                                <th class="text-left">Дата выполнения</th>
+                                <th class="text-left">Клиент</th>
+                                <th class="text-left">Цена безнал</th>
+                                <th class="text-left">Цена нал</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, index) in mngDetails" :key="index">
+                                <td>{{ index }}</td>
+                                <td>{{ item.zak_numbet }}</td>
+                                <td>{{ item.zak_final_data }}</td>
+                                <td>{{ item.klient_name }}</td>
+                                <td>{{ item.summa_sheta_1c }}</td>
+                                <td>{{ item.total_summ }}</td>
+                            </tr>
+                        </tbody>
+                        </template>
+                    </v-simple-table>
+
+                </v-col>
+            </v-row>
 
             <v-row>
                 <v-col cols="12">
@@ -75,6 +111,7 @@ export default {
             endData:(new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10),
             managerEmail:"",
             mngReport:[],
+            mngDetails:[],
             headers: [
                 {
                     text: 'Менеджер',
@@ -107,7 +144,8 @@ export default {
                     }
                 })
                 .then( (resp) => {
-                    this.mngReport = resp.data.slice()
+                    this.mngReport = resp.data.result.slice()
+                    this.mngDetails = resp.data.detail.slice()
                     console.log(this.mngReport);
                     console.log(resp);
                 })
