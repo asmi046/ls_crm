@@ -54,6 +54,14 @@
                     <h2>Детализация по менеджерам</h2>
                 </v-col>
             </v-row>
+
+            <v-row>
+                <v-col>
+                    <v-btn :disabled="mngDetails.length == 0" class="mt-4 mb-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/details.php?start='+this.startData+'&end='+this.endData+'&manager='+this.managerEmail" color="success">
+                        <v-icon class="mr-2">mdi-microsoft-excel</v-icon> Сохранить в excel
+                    </v-btn>
+                </v-col>
+            </v-row>
             
             <v-row>
                 <v-col>
@@ -63,6 +71,7 @@
                             <tr>
                                 <th class="text-left">№</th>
                                 <th class="text-left">Номер заказа</th>
+                                <th class="text-left">Менеджер</th>
                                 <th class="text-left">Дата выполнения</th>
                                 <th class="text-left">Клиент</th>
                                 <th class="text-left">Цена безнал</th>
@@ -73,6 +82,7 @@
                             <tr v-for="(item, index) in mngDetails" :key="index">
                                 <td>{{ index }}</td>
                                 <td>{{ item.zak_numbet }}</td>
+                                <td>{{ item.mng_name }}</td>
                                 <td>{{ item.zak_final_data }}</td>
                                 <td>{{ item.klient_name }}</td>
                                 <td>{{ item.summa_sheta_1c }}</td>
@@ -84,6 +94,8 @@
 
                 </v-col>
             </v-row>
+
+
 
             <v-row>
                 <v-col cols="12">
@@ -133,14 +145,19 @@ export default {
       ...mapGetters (["REST_API_PREFIX", "MANAGER_EMAIL_LIST", "USER_STATUS"])
     },
 
+    mounted: function() {
+        if (this.MANAGER_EMAIL_LIST.length == 0) 
+            this.$store.dispatch('updateManagerInfo')    
+    },
+    
     methods: {
         getReport() {
                 axios.get(this.REST_API_PREFIX + 'sale_report',
                 {
                     params: {
-                        start: this.startData,
-                        end: this.endData,
-                        manager: this.managerEmail,
+                        start:this.startData,
+                        end:this.endData,
+                        manager:this.managerEmail
                     }
                 })
                 .then( (resp) => {
