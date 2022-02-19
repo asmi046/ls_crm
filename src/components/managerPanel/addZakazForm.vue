@@ -294,7 +294,14 @@ export default {
         recalcZakTable() {
             this.zakazData.totalsumm = 0;
             this.summWitchSale = 0;
+
+            
             this.zakazData.zaktovars.forEach((elem) => {
+
+                if (elem.price == "") elem.price = 0
+                if (elem.count == "") elem.count = 1
+                if (elem.sale == "") elem.sale = 0
+
                 elem.summ = (elem.sale === 0)?parseFloat(elem.count) * parseFloat(elem.price):(parseFloat(elem.count) * parseFloat(elem.price) * (1 - parseFloat(elem.sale)/100));
                 this.zakazData.totalsumm += parseFloat(elem.summ);
                 this.summWitchSale += parseFloat(parseFloat(elem.count) * parseFloat(elem.price));

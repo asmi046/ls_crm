@@ -266,7 +266,7 @@ export default {
                 color = "#347815"
               
               if (this.MAIN_ORDER_LIST[i].status === "Черновик")
-                color = "#707070"
+                continue
 
               ev.push({
                 name: this.MAIN_ORDER_LIST[i].zak_numbet+" "+this.MAIN_ORDER_LIST[i].klient_name,

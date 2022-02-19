@@ -57,7 +57,7 @@
 
             <v-row>
                 <v-col>
-                    <v-btn :disabled="mngDetails.length == 0" class="mt-4 mb-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/details.php?start='+this.startData+'&end='+this.endData+'&manager='+this.managerEmail" color="success">
+                    <v-btn :disabled="mngDetails.length == 0" class="mt-4 mb-4" target="_blank" :href = "'https://lightsnab.ru/wp-content/themes/light-shop/excel_kp/details.php?start='+startData+'&end='+endData+'&manager='+managerEmail" color="success">
                         <v-icon class="mr-2">mdi-microsoft-excel</v-icon> Сохранить в excel
                     </v-btn>
                 </v-col>
@@ -74,6 +74,7 @@
                                 <th class="text-left">Менеджер</th>
                                 <th class="text-left">Дата выполнения</th>
                                 <th class="text-left">Клиент</th>
+                                <th class="text-left">Счет 1С</th>
                                 <th class="text-left">Цена безнал</th>
                                 <th class="text-left">Цена нал</th>
                             </tr>
@@ -85,6 +86,7 @@
                                 <td>{{ item.mng_name }}</td>
                                 <td>{{ item.zak_final_data }}</td>
                                 <td>{{ item.klient_name }}</td>
+                                <td>{{ item.nomer_sheta_1c }}</td>
                                 <td>{{ item.summa_sheta_1c }}</td>
                                 <td>{{ item.total_summ }}</td>
                             </tr>
