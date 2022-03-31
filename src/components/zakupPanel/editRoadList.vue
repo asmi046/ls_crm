@@ -180,7 +180,7 @@ export default {
     },
     
     computed: {
-      ...mapGetters (["REST_API_PREFIX", "ALL_SCLAD_INFO"])
+      ...mapGetters (["REST_API_PREFIX", "ALL_SCLAD_INFO", "USER_STATUS"])
     },
 
     methods:{
@@ -296,7 +296,8 @@ export default {
             axios.get(this.REST_API_PREFIX + 'get_zakaz_for_ml',
                         {
                             params: {
-                                data: this.mainData
+                                data: this.mainData,
+                                status: this.USER_STATUS,
                             }
                         })
                         .then( (resp) => {
@@ -327,7 +328,7 @@ export default {
                         {
                             params: {
                                 mlid: this.$route.params.listid,
-                                
+                                status: this.USER_STATUS,
                             }
                         })
                         .then( (resp) => {
