@@ -180,7 +180,7 @@ export default {
     },
     
     computed: {
-      ...mapGetters (["REST_API_PREFIX", "ALL_SCLAD_INFO", "USER_STATUS"])
+      ...mapGetters (["REST_API_PREFIX", "ALL_SCLAD_INFO", "USER_STATUS", "USER_EMAIL"])
     },
 
     methods:{
@@ -260,6 +260,7 @@ export default {
                 {
                         rlid: this.$route.params.listid,
                         zaknumber: item.zak_numbet,
+                        mail:this.USER_EMAIL,
                         deliveryinfo:item
         
                 })
@@ -298,6 +299,7 @@ export default {
                             params: {
                                 data: this.mainData,
                                 status: this.USER_STATUS,
+                                mail: this.USER_EMAIL,
                             }
                         })
                         .then( (resp) => {
@@ -329,6 +331,7 @@ export default {
                             params: {
                                 mlid: this.$route.params.listid,
                                 status: this.USER_STATUS,
+                                mail: this.USER_EMAIL,
                             }
                         })
                         .then( (resp) => {
@@ -369,7 +372,8 @@ export default {
                 axios.post(this.REST_API_PREFIX + 'add_sclad_to_road_list',
                 {
                         rlid: this.$route.params.listid,
-                        scladinfo: this.skladinfo
+                        scladinfo: this.skladinfo,
+                        mail:this.USER_EMAIL,
         
                 })
                 .then( (resp) => {

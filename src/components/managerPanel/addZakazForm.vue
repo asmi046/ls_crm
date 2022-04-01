@@ -322,6 +322,14 @@ export default {
         },
 
         addTovarToZak(element) {
+            for (let i = 0; i<this.zakazData.zaktovars.length; i++){
+                if (this.zakazData.zaktovars[i].sku == element.sku) {
+                    this.zakazData.zaktovars[i].count =  parseFloat(this.zakazData.zaktovars[i].count)+1;
+                    this.recalcZakTable();
+                    return;
+                }
+            }
+
             this.zakazData.zaktovars.push({
                 img: element.img,
                 name: element.name,
@@ -336,7 +344,7 @@ export default {
                 comment:element.comment
             })
 
-console.
+
         this.recalcZakTable();
             
         },

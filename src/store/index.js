@@ -41,6 +41,7 @@ export default new Vuex.Store ({
             {text: 'Создать заказ', icon: 'mdi-file-document-outline', to: {name:'addzak'}},
             {text: 'База товаров', icon: 'mdi-file-alert-outline', to: {name:'addtovtobase'}},
             {text: 'Управление складами', icon: 'mdi-map-marker-outline', to: {name:'addscladtobase'}},
+            {text: 'Маршрутные листы', icon: 'mdi-car', to: {name:'roatlists'}}
         ],
         mainMenuSaler: [
             {text: 'Главная', icon: 'mdi-home', to: "/"},
@@ -162,6 +163,10 @@ export default new Vuex.Store ({
             ctx.commit('updateUserName', value);
         },
 
+        chengeUserEmail(ctx, value){
+            ctx.commit('chengeUserEmail', value);
+        },
+
         chengeUserStatus(ctx, value){
             ctx.commit('updateUserStatus', value);
         },
@@ -194,6 +199,10 @@ export default new Vuex.Store ({
 
         updateUserName(state, newVal) {
             state.userName = newVal;
+        },
+
+        chengeUserEmail(state, newVal) {
+            state.userEmail = newVal;
         },
 
         updateUserStatus(state, newVal) {
@@ -261,6 +270,10 @@ export default new Vuex.Store ({
 
         USER_NAME (state) {
             return state.userName;
+        },
+
+        USER_EMAIL (state) {
+            return state.userEmail;
         },
 
         getLoginState(state){

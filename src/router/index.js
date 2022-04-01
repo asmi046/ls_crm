@@ -105,6 +105,7 @@ router.beforeEach((to, from, next) => {
         store.dispatch('chengeAutorise',  true);
         store.dispatch('chengeUserName',   localStorage.getItem('fio'));
         store.dispatch('chengeUserStatus',   localStorage.getItem('status'));
+        store.dispatch('chengeUserEmail',   localStorage.getItem('mail'));
         store.dispatch('showedPanel',  true);
     }
     else {
