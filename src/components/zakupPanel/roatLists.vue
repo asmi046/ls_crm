@@ -89,7 +89,7 @@
 
                         <template v-slot:[`item.control`]="{ item }">
                             <v-icon class = "mr-2" title = "Редактировать заказ" @click="$router.push({name:'editroadlist', params: {listid: item.id}})" >mdi-clipboard-edit-outline</v-icon>
-                            <v-icon class = "mr-2" title = "Удалить заказ" @click="deleteList(item)" >mdi-delete-outline</v-icon>
+                            <!-- <v-icon class = "mr-2" title = "Удалить заказ" @click="deleteList(item)" >mdi-delete-outline</v-icon> -->
                         </template>
 
                     </v-data-table>
